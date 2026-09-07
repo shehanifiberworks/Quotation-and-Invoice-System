@@ -1,0 +1,1807 @@
+
+
+
+
+
+<!DOCTYPE html><html lang="si"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>SFG Quotation - Shehani Fiberglass Works</title>    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>    <script src="image/html2pdf.bundle.min.js"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>    <style>
+        :root {
+            --dark-blue: #004085;
+            --light-gray: #e9ecef;
+            --border-color: #777;
+            --blood-red: #880808;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .main-wrapper {
+            display: flex;
+            width: 1400px; 
+            gap: 20px;
+        }
+        /* --- Left Side: Form --- */
+        .form-container {
+            width: 40%;
+            border: 1px solid var(--border-color);
+            padding: 0;
+            background-color: #fff;
+            align-self: flex-start;
+        }
+        .header-bar {
+            background-color: var(--dark-blue);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .doc-type-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            background-color: #e9ecef;
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .doc-type-btn {
+            flex: 1;
+            padding: 6px 12px;
+            border: 1px solid var(--dark-blue);
+            background-color: white;
+            color: var(--dark-blue);
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        .doc-type-btn.active {
+            background-color: var(--dark-blue);
+            color: white;
+        }
+        .form-content { padding: 15px; }
+        .row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+        .row label { width: 130px; font-weight: bold; font-size: 13px; }
+        .row input, .row select { 
+            padding: 4px; border: 1px solid var(--border-color); border-radius: 2px; flex: 1;
+        }
+        .items-pricing-box {
+            background-color: #d1d1d1;
+            padding: 8px;
+            border: 1px solid #999;
+            margin-top: 10px;
+        }
+        .item-entry { margin-bottom: 8px; border-bottom: 1px dashed #666; padding-bottom: 5px; }
+        .hand-icons { display: flex; align-items: center; gap: 5px; margin: 5px 0; }
+        .hand-box { display: flex; align-items: center; gap: 3px; font-weight: bold; font-size: 11px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 5px; }
+        .btn-add { background: #004085; color: white; border: none; padding: 3px 10px; cursor: pointer; border-radius: 3px; font-weight: bold; font-size: 12px; }
+        .btn-del { background: #c82333; color: white; border: none; padding: 3px 10px; cursor: pointer; border-radius: 3px; font-weight: bold; font-size: 12px; }
+        .terms-box { margin-top: 15px; font-size: 12px; font-weight: bold; }
+        .terms-box div { margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
+        /* UPLOAD SECTION */
+        .upload-section { margin-top: 10px; padding: 8px; border: 1px dashed #004085; background: #f0f4f8; }
+        .upload-controls { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .btn-img-del { background: #dc3545; color: white; border: none; padding: 2px 8px; cursor: pointer; border-radius: 3px; font-size: 10px; }
+        .bottom-btns { display: flex; justify-content: center; gap: 15px; margin-top: 20px; padding-bottom: 20px; flex-wrap: wrap; }
+        .print-btn { background: linear-gradient(#1c69b5, #004085); border-radius: 25px; color: white; border: none; padding: 8px 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        .save-btn { background: linear-gradient(#88c45c, #4c8c2b); border-radius: 25px; color: white; border: none; padding: 8px 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        .draft-btn { background: linear-gradient(#f0ad4e, #ec971f); border-radius: 25px; color: white; border: none; padding: 8px 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        .dash-link { background: #6c757d; border-radius: 25px; color: white; border: none; padding: 8px 20px; text-decoration: none; font-weight: bold; font-size: 13.5px; display: flex; align-items: center; cursor: pointer; }
+        .draft-manager-box {
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+        #draft-select option.type-quotation { background-color: #e0f2fe; }
+        #draft-select option.type-invoice { background-color: #fee2e2; }
+        /* --- Right Side: Quotation Preview --- */
+        .preview-container {
+            width: 210mm;
+            height: 297mm;
+            border: 1px solid #999;
+            background-color: white;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            overflow: hidden;
+        }
+        .preview-content { flex-grow: 1; padding: 5mm 15mm 0 15mm; }
+        .preview-header { border-top: 8px solid var(--dark-blue); padding: 0; position: relative; }
+        .logo-section { text-align: center; margin-bottom: 0px; margin-top: 5px; position: relative; }                 
+        .logo-top-badge {
+            position: absolute; top: 45.2px; right: 20.5mm; font-size: 26px; font-weight: bold;
+            color: #f0f4f7; background-color: transparent; padding: 0; border: none;
+        }
+        .logo-img, .footer-banner-img { width: calc(100% - 30mm); height: auto; display: block; margin: 0 auto; }
+        .info-grid { display: flex; justify-content: space-between; margin-top: 0px; font-size: 13px; }
+        .customer-info-block { display: flex; flex-direction: row; margin-top: -3px; }
+        .customer-details { display: flex; flex-direction: column; }
+        #out-address { display: block; margin-top: 0px; line-height: 1.3; }
+        .subject-bar {             
+            background-color: #f0f4f8 !important; border-left: 5px solid var(--dark-blue);             
+            padding: 8px 10px; margin: 15px 0; font-weight: bold; color: var(--dark-blue); 
+            -webkit-print-color-adjust: exact; min-height: 20px; font-size: 19px; text-transform: uppercase;
+        }
+        #quote-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 15px; table-layout: fixed; }
+        #quote-table th { background-color: var(--dark-blue) !important; color: white !important; padding: 10px 8px; text-align: left; -webkit-print-color-adjust: exact; font-size: 14px; border: none; }
+        #out-table-body td { padding: 12px 8px; border-bottom: 1px solid #ddd; word-wrap: break-word; line-height: 1.6; border-left: none; border-right: none; }
+        .text-right { text-align: right; }
+        .col-desc { width: 48%; }
+        .col-size { width: 10%; }
+        .col-side { width: 8%; }
+        .col-qty   { width: 6%; }
+        .col-price { width: 14%; }
+        .col-total { width: 14%; }
+        .summary-container { display: flex; justify-content: flex-end; margin-top: 5px; width: 100%; }
+        .calculation-side { width: 100%; }
+        .total-row { display: flex; justify-content: flex-end; padding: 3px 0; font-size: 15px; }
+        .total-row span:first-child { margin-right: 15px; }
+        .total-row span:last-child { width: 14%; text-align: right; padding-right: 8px; }
+        .total-banner {             
+            background-color: var(--dark-blue) !important; color: white !important; 
+            padding: 10px; display: flex; justify-content: space-between; 
+            margin-top: 5px; font-weight: bold; -webkit-print-color-adjust: exact; font-size: 16px;
+        }
+        .footer-terms-wrap { margin-top: 15px; font-size: 12.5px; line-height: 1.4; }
+        .stamp-wrap { margin-top: 10px; width: 4cm; height: 4cm; display: flex; justify-content: center; align-items: center; float: right; }
+        #out-stamp { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
+        .footer-signs { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15mm 10mm 15mm; }
+        #qrcode-wrap { width: 3.0cm; height: 3.0cm; display: flex; align-items: center; justify-content: center; visibility: hidden; }
+        .sign-block { text-align: right; font-size: 13px; }
+        .sign-img { width: 120px; height: auto; margin-bottom: -10px; }
+        /* Custom Alert Modal */
+        #custom-alert-modal {            
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;            
+            background: rgba(0,0,0,0.5); z-index: 20000; justify-content: center; align-items: center;        
+        }
+        .custom-alert-box {            
+            background: white; width: 380px; border-radius: 8px; padding: 20px;            
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center;        
+        }
+        /* --- Delivery Order Modal --- */
+        #do-modal {            
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;            
+            background: rgba(0,0,0,0.7); z-index: 30000; justify-content: center; align-items: center; overflow-y: auto; padding: 10px;        
+        }
+        .do-modal-content {            
+            background: white; width: 297mm; height: 210mm; padding: 0; box-sizing: border-box;            
+            display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;            
+            box-shadow: 0 0 25px rgba(0,0,0,0.6); border: 2px solid var(--blood-red);            
+            transform: scale(0.85); transform-origin: center center; margin: -15px 0;        }
+        .do-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; z-index: 100; }
+        .do-image-container {            
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }                
+        .do-image-container img {            
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+        .do-overlay {            
+            position: absolute;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #000000;
+            white-space: nowrap;
+        }
+        .do-company { top: 27.8%; left: 15.5%; width: 55%; }
+        .do-address { top: 31.8%; left: 15.5%; width: 55%; font-size: 15px; }
+        .do-subject { top: 35.2%; left: 15.5%; width: 55%; font-size: 15px; }                
+        .do-date { top: 11.2%; left: 81.5%; width: 18%; font-size: 15px; }
+        .do-rdno { top: 15.8%; left: 81.5%; width: 18%; font-size: 15px; }
+        .do-dono { top: 19.4%; left: 81.5%; width: 18%; font-size: 26px; font-weight: 900; }
+        .do-invoiceno { top: 27.8%; left: 81.5%; width: 18%; font-size: 15px; display: none; }
+        .do-prno { top: 31.8%; left: 81.5%; width: 18%; font-size: 15px; display: none; }
+        .do-issuedate { top: 90.0%; left: 50%; transform: translateX(-50%); font-size: 15px; text-align: center; }
+        
+        .do-status { 
+            top: 35.2%; 
+            left: 81.0%; 
+            width: 18%; 
+            font-size: 15px; 
+            font-weight: 700; 
+        }
+
+        @media print {            
+            @page { size: A4 portrait; margin: 0; }
+            .no-print { display: none !important; }
+            body { padding: 0 !important; margin: 0 !important; background-color: white !important; }
+            .form-container { display: none !important; }
+
+            /* Default print mode for Quotation & Invoice (Standard A4) */
+            .preview-container { display: flex !important; width: 210mm; height: 297mm; border: none !important; }
+            #do-modal { display: none !important; }
+
+            /* Print mode for Delivery Order - Two A5 landscape sheets positioned precisely at top and bottom of A4 portrait */
+            body.print-do-mode @page { size: A4 portrait; margin: 0; }
+            body.print-do-mode { 
+                padding: 0 !important; 
+                margin: 0 !important; 
+                height: 297mm !important; 
+                width: 210mm !important; 
+                position: relative !important;
+                overflow: hidden !important; 
+            }
+            body.print-do-mode #do-modal { 
+                position: absolute !important; 
+                top: 0 !important;
+                left: 0 !important;
+                background: none !important; 
+                display: block !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+                width: 210mm !important; 
+                height: 297mm !important; 
+            }
+            body.print-do-mode .preview-container { display: none !important; }
+            body.print-do-mode .do-modal-content#do-pdf-area { 
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 210mm !important; 
+                height: 148.5mm !important; 
+                max-width: 210mm !important;
+                max-height: 148.5mm !important;
+                min-width: 210mm !important;
+                min-height: 148.5mm !important;
+                box-shadow: none !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+                border: none !important; 
+                transform: none !important; 
+                display: flex !important;
+                overflow: hidden !important;
+            }
+            body.print-do-mode #do-pdf-area-2 { 
+                position: absolute !important;
+                top: 148.5mm !important;
+                left: 0 !important;
+                width: 210mm !important; 
+                height: 148.5mm !important; 
+                max-width: 210mm !important;
+                max-height: 148.5mm !important;
+                min-width: 210mm !important;
+                min-height: 148.5mm !important;
+                box-shadow: none !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+                border: none !important; 
+                transform: none !important; 
+                display: flex !important;
+                overflow: hidden !important;
+            }
+        }
+    
+        /* --- Quotation Details Settings --- */
+        .settings-header { position: relative; display: flex; align-items: center; justify-content: center; }
+        .settings-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 31px; height: 31px; border: 1px solid rgba(255,255,255,.65); border-radius: 5px; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; font-size: 17px; line-height: 29px; padding: 0; }
+        .settings-btn:hover { background: rgba(255,255,255,.25); }
+        #settings-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:40000; justify-content:center; align-items:center; padding:15px; }
+        .settings-modal-box { background:#fff; width:620px; max-width:96vw; max-height:90vh; overflow-y:auto; border-radius:9px; box-shadow:0 8px 28px rgba(0,0,0,.35); }
+        .settings-modal-head { background:#004085; color:#fff; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; border-radius:9px 9px 0 0; }
+        .settings-modal-head h3 { margin:0; font-size:17px; }
+        .settings-close { background:#dc3545; color:#fff; border:none; border-radius:4px; padding:5px 10px; cursor:pointer; font-weight:bold; }
+        .settings-body { padding:16px; }
+        .settings-section { border:1px solid #d5d5d5; border-radius:6px; padding:12px; margin-bottom:12px; }
+        .settings-section-title { font-weight:bold; color:#004085; margin-bottom:9px; font-size:14px; }
+        .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .settings-field label { display:block; font-size:12px; font-weight:bold; margin-bottom:4px; color:#333; }
+        .settings-field input, .settings-field textarea { width:100%; box-sizing:border-box; padding:7px; border:1px solid #aaa; border-radius:4px; font-family:inherit; font-size:12px; }
+        .settings-field textarea { min-height:62px; resize:vertical; }
+        .settings-list-row { display:flex; gap:6px; margin-bottom:6px; }
+        .settings-list-row input { flex:1; padding:6px; border:1px solid #aaa; border-radius:4px; font-size:12px; }
+        .settings-small-btn { border:none; border-radius:4px; padding:6px 9px; cursor:pointer; color:#fff; font-weight:bold; font-size:11px; }
+        .settings-add { background:#28a745; }
+        .settings-remove { background:#dc3545; }
+        .settings-save { background:linear-gradient(#1c69b5,#004085); color:#fff; border:none; padding:9px 18px; border-radius:20px; cursor:pointer; font-weight:bold; }
+        .settings-cancel { background:#6c757d; color:#fff; border:none; padding:9px 18px; border-radius:20px; cursor:pointer; font-weight:bold; }
+        .settings-footer { display:flex; justify-content:flex-end; gap:8px; padding-top:4px; }
+        .settings-note { font-size:11px; color:#666; margin-top:5px; }
+        @media (max-width:650px) { .settings-grid { grid-template-columns:1fr; } .settings-modal-box { width:100%; } }
+
+        #new-number-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:50000;align-items:center;justify-content:center}
+        .new-number-box{width:min(440px,90vw);background:#fff;border-radius:18px;padding:28px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.35);border-top:7px solid #004085}
+        .new-number-title{font-size:20px;font-weight:800;color:#004085;letter-spacing:.5px}.new-number-label{margin:18px 0 7px;color:#666;font-weight:700}
+        #new-number-input{width:100%;box-sizing:border-box;text-align:center;font-size:42px;font-weight:900;color:#004085;padding:12px;border:2px solid #004085;border-radius:12px;outline:none}
+        .new-number-actions{margin-top:18px}.new-number-actions button{background:linear-gradient(#1c69b5,#004085);color:#fff;border:0;border-radius:25px;padding:11px 30px;font-size:15px;font-weight:800;cursor:pointer}
+        body.sheet-view{background:#eee!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;padding:20px!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}.sheet-view .main-wrapper{display:block!important;width:auto!important}.sheet-view .form-container,.sheet-view .dashboard-modal,.sheet-view #dashboard-modal,.sheet-view #custom-warning-modal,.sheet-view #custom-alert-modal,.sheet-view #do-modal,.sheet-view .no-print{display:none!important}.sheet-view .preview-container{display:flex!important;margin:0 auto!important;box-shadow:0 8px 30px rgba(0,0,0,.18)}
+
+        /* =========================================================
+           INVOICE-ONLY VISUAL REDESIGN
+           Presentation changes only. Existing data, calculations,
+           fields, document logic and print dimensions remain intact.
+           ========================================================= */
+        body.invoice-design .preview-container {
+            border: 1px solid #d7dee8;
+            border-top: 0;
+            box-shadow: 0 8px 28px rgba(0, 64, 133, 0.10);
+            position: relative;
+        }
+        body.invoice-design .preview-header {
+            border-top: 9px solid #004085;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            padding-bottom: 5px;
+            border-bottom: 1px solid #dce5ef;
+        }
+        body.invoice-design .logo-section {
+            margin-top: 7px;
+            padding: 2px 0 4px;
+        }
+        body.invoice-design .logo-img {
+            filter: none;
+        }
+        body.invoice-design .logo-top-badge {
+            color: #e7edf5;
+            font-size: 28px;
+        }
+        body.invoice-design .preview-content {
+            padding-top: 7mm;
+        }
+        body.invoice-design .info-grid {
+            background: #f8fafc;
+            border: 1px solid #dbe3ec;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 1px;
+            box-sizing: border-box;
+        }
+        body.invoice-design .customer-info-block {
+            margin-top: 0;
+        }
+        body.invoice-design #out-address {
+            line-height: 1.45;
+        }
+        body.invoice-design .subject-bar {
+            background: #004085 !important;
+            color: #ffffff !important;
+            border-left: 0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin: 13px 0 10px;
+            min-height: 19px;
+            font-size: 18px;
+            letter-spacing: .2px;
+            box-shadow: 0 3px 8px rgba(0,64,133,.12);
+        }
+        body.invoice-design #quote-table {
+            margin-top: 10px;
+            font-size: 14px;
+            border: 1px solid #d7dee8;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+        body.invoice-design #quote-table th {
+            background: #123f6d !important;
+            padding: 9px 8px;
+            font-size: 13px;
+            border-right: 1px solid rgba(255,255,255,.16);
+        }
+        body.invoice-design #out-table-body td {
+            padding: 8px 8px;
+            border-bottom: 1px solid #e2e7ed;
+            line-height: 1.4;
+        }
+        body.invoice-design #out-table-body tr:last-child td {
+            border-bottom: 0;
+        }
+        body.invoice-design .summary-container {
+            margin-top: 9px;
+            padding-top: 5px;
+            border-top: 1px solid #dbe3ec;
+        }
+        body.invoice-design .total-row {
+            padding: 4px 0;
+            font-size: 14px;
+        }
+        body.invoice-design .total-banner {
+            background: linear-gradient(90deg, #004085, #0a5c9f) !important;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 6px;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,64,133,.12);
+        }
+        body.invoice-design .footer-terms-wrap {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #e1e6ec;
+            font-size: 11.5px;
+            color: #4b5563;
+        }
+        body.invoice-design .stamp-wrap {
+            margin-top: 8px;
+        }
+        body.invoice-design .footer-signs {
+            padding-bottom: 9mm;
+        }
+        body.invoice-design #qrcode-wrap {
+            border: 1px solid #e0e6ed;
+            border-radius: 5px;
+            padding: 3px;
+            box-sizing: border-box;
+            background: #fff;
+        }
+        @media print {
+            body.invoice-design .preview-container {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+    </style></head><body>
+<div class="main-wrapper">    <div class="form-container">        <div class="header-bar settings-header"><span>Quotation Details</span><button type="button" class="settings-btn" onclick="openSettingsModal()" title="Settings">⚙️</button></div>        <div class="doc-type-toggle">            <button class="doc-type-btn active" id="btn-doc-quotation" onclick="setDocType('QUOTATION')">QUOTATION</button>            <button class="doc-type-btn" id="btn-doc-invoice" onclick="setDocType('INVOICE')">INVOICE</button>        </div>        <div class="form-content">            <div class="row">                <label>Order Date:</label>                 <input type="date" id="in-date" value="" oninput="sync(); checkAutoSave();" onchange="sync(); checkAutoSave();">                <label style="width: auto;">Complete Date:</label>                 <input type="date" id="in-cdate" placeholder="DD/MM/YYYY" oninput="sync(); checkAutoSave();" onchange="sync(); checkAutoSave();">            </div>            <div class="row">                <label>Customer:</label>                 <input list="customer-list" id="in-address" value="" placeholder="Enter or select Customer Name" oninput="sync(); checkAutoSave();">                <datalist id="customer-list">                    <option value="ATG Ceylon (Pvt) Ltd">                    <option value="ATG Hand Care (Pvt) Ltd">                    <option value="ATG Occupational (Pvt) Ltd">                </datalist>            </div>            <div class="row">                <label>Address:</label>                 <input list="address-list" id="in-cust-addr" value="" placeholder="Enter or select Customer Address" oninput="sync(); checkAutoSave();">                <datalist id="address-list">                    <option value="Spur Road 7, Phase II, IPZ Katunayake">                    <option value="Block No. 35, WEPZ, Wathupitiwala, Sri Lanka">                    <option value="Katunayake">                    <option value="Wathupitiwala">                </datalist>            </div>            <div class="row">                <label>PR No:</label>                 <input type="text" id="in-pono" value="............................." placeholder="Enter PR No" onfocus="clearPRPlaceholder(this)" oninput="sync(); checkAutoSave();">                <label style="width: auto;">RD No:</label>                 <input type="text" id="in-rdno" placeholder="Enter RD No" oninput="sync(); checkAutoSave();">            </div>            <div class="row">                <label id="lbl-qno">Quotation No:</label>                 <input type="text" id="in-qno" value="" readonly style="background: #f0f0f0;">                <label style="width: auto; font-size: 11px;">                    <input type="checkbox" id="chk-show-qno" onchange="sync(); checkAutoSave();" checked> Show in Quote                </label>            </div>            <div class="row">                <label>Subject:</label>                 <input type="text" id="in-subject" placeholder="Enter Subject" oninput="sync();" onblur="checkAutoSave()" style="border: 1px solid #444; height: 30px;">            </div>
+            <div class="items-pricing-box">                <strong style="font-size: 13px;">Items & Pricing</strong>                <div id="items-list">                    <div class="item-entry">                        <input type="text" class="i-desc" placeholder="Item Description" style="width: 95%; margin-bottom: 3px; font-size: 12px;" oninput="sync(); checkAutoSave();">                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">                            <input type="date" class="i-del-date" placeholder="Delivery Date" style="width: 48%; font-size: 11px;" value="" oninput="onDeliveryDateInput(this)" onchange="onDeliveryDateInput(this)">                            <input type="text" class="i-dono" placeholder="D.O No" style="width: 48%; font-size: 11px;" oninput="sync(); checkAutoSave(); checkAllItemDOStatus();">                        </div>                        <div style="display:flex; gap: 8px; align-items: center; font-size: 12px; flex-wrap: wrap;">                            <div>Size: <input type="text" class="i-size" style="width: 45px;" oninput="sync(); checkAutoSave();"></div>                            <div class="hand-icons">                                <span class="hand-box"><input type="checkbox" class="i-left" onchange="sync(); checkAutoSave();"> L</span>                                <span class="hand-box"><input type="checkbox" class="i-right" onchange="sync(); checkAutoSave();"> R</span>                            </div>                            <div>Qty: <input type="number" class="i-qty" style="width: 40px;" oninput="sync(); checkAutoSave();"></div>                            <div style="display:flex; align-items:center; gap:4px;">Price: <input type="number" class="i-price" style="width: 70px;" oninput="sync(); checkAutoSave();"></div>                            <button type="button" class="btn-do-generate" disabled onclick="openDeliveryOrder(this)" style="padding:2px 6px; font-size:10px; cursor:pointer; background:#6c757d; color:white; border:none; border-radius:3px;">Delivery Order</button>                        </div>                    </div>                </div>                <div class="btn-group">                    <button class="btn-add" onclick="addItem()">+ Add</button>                    <button class="btn-del" onclick="delItem()">- Remove</button>                </div>            </div>
+            <div class="row" style="margin-top: 10px;">                <label>Value added Tax:</label>                 <input type="number" id="in-tax" value="0" oninput="sync(); checkAutoSave();" style="width: 80px; flex: none;">                <label style="width: auto; font-size: 11px;">                    <input type="checkbox" id="chk-show-tax" onchange="sync(); checkAutoSave();"> Show in Quote                </label>            </div>
+            <div class="terms-box" id="quotation-terms-box">                <p style="margin-bottom: 5px;">TERMS & CONDITIONS</p>                <div><input type="checkbox" id="chk-est" onchange="sync(); checkAutoSave();" checked> Above information is an estimate of goods / services</div>                <div><input type="checkbox" id="chk-req" onchange="sync(); checkAutoSave();" checked> At the Request of Mr. <input type="text" id="in-req-name" style="width: 100px; border-bottom: 1px solid #000; border-top:none; border-left:none; border-right:none;" oninput="sync(); checkAutoSave();"></div>                <div><input type="checkbox" id="chk-price" onchange="sync(); checkAutoSave();" checked> Pricing Including of all material charges.</div>                <div><input type="checkbox" id="chk-adv" onchange="sync(); checkAutoSave();" checked> Please give <input type="text" id="in-adv-val" style="width: 30px;" oninput="sync(); checkAutoSave();">% Advance payment.</div>                <div id="custom-quotation-terms"></div><div style="margin-top: 5px; color: #004085;"><input type="checkbox" id="chk-show-qr" onchange="sync(); checkAutoSave();" checked> <strong>Include QR Code</strong></div>            </div>
+            <div class="terms-box" id="invoice-terms-box" style="display: none;">                <p style="margin-bottom: 5px;">NOTICE / NOTES</p>                <div><input type="checkbox" id="inv-chk-1" onchange="sync(); checkAutoSave();" checked> Above information is an estimate of goods / services</div>                <div><input type="checkbox" id="inv-chk-2" onchange="sync(); checkAutoSave();" checked> At the Request of Mr. <input type="text" id="inv-req-name" style="width: 100px; border-bottom: 1px solid #000; border-top:none; border-left:none; border-right:none;" readonly style="background: #f0f0f0;" oninput="sync(); checkAutoSave();"></div>                <div><input type="checkbox" id="inv-chk-3" onchange="sync(); checkAutoSave();" checked> Pricing Including of all material charges.</div>                <div><input type="checkbox" id="inv-chk-4" onchange="sync(); checkAutoSave();" checked> An advance payment of <input type="text" id="inv-adv-val" style="width: 30px;" oninput="sync(); checkAutoSave();">% has been received for this order.</div>                <div style="margin-top: 5px;"><label style="width: auto; font-weight: bold;">Advance Amount:</label> <input type="number" id="inv-advance-amount" value="0" oninput="sync(); checkAutoSave();" style="width: 100px;"></div>                <div id="custom-invoice-notes"></div><div style="margin-top: 5px; color: #004085;"><input type="checkbox" id="inv-chk-show-qr" onchange="sync(); checkAutoSave();" checked> <strong>Include QR Code</strong></div>            </div>
+            <div class="draft-manager-box">                <p style="margin: 0 0 5px 0; font-size: 12px; font-weight: bold;">Saved Drafts Manager:</p>                <div style="display: flex; gap: 5px; margin-bottom: 5px;">                    <select id="draft-select" style="flex: 1; padding: 4px; font-size: 12px;" onchange="loadSelectedDraft()">                        <option value="">-- Select Saved Draft --</option>                    </select>                    <button class="btn-del" onclick="promptDeleteSelectedDraft()" style="padding: 4px 10px; font-size: 11px; margin: 0;">Delete</button>                </div>                <div style="display: flex; gap: 5px;">                    <button class="draft-btn" onclick="exportDraftsFile()" style="flex: 1; padding: 4px 10px; font-size: 11px; margin: 0; background: linear-gradient(#28a745, #218838);">📥 Export Backup File</button>                    <button class="draft-btn" onclick="document.getElementById('import-file-input').click()" style="flex: 1; padding: 4px 10px; font-size: 11px; margin: 0; background: linear-gradient(#17a2b8, #138496);">📤 Import Backup File</button>                    <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importDraftsFile(event)">                </div>            </div>
+            <div class="upload-section">                <label style="font-size: 12px; font-weight: bold;">Upload stamp:</label><br>                <div class="upload-controls">                    <input type="file" id="in-stamp-file" accept="image/*" onchange="handleStamp(event)" style="font-size: 11px; width: 100%;">
+                    <button class="btn-img-del" onclick="deleteStamp()">Delete Image</button>
+                </div>
+            </div>
+            <div class="bottom-btns">                <button class="print-btn" id="btn-print" onclick="triggerPDF()">🖨️ Print</button>                <button class="save-btn" id="save-btn" onclick="saveCurrentDocument()">💾 Save</button>                                <button type="button" class="dash-link" onclick="newDocument()">🆕 New</button>                <button type="button" class="dash-link" onclick="openDashboardModal()">📁 Dashboard</button><button type="button" class="dash-link" onclick="openDocumentsPage()">📄 Sheets</button>            </div>        </div>    </div>
+    <!-- Dashboard Modal -->    
+    <div id="dashboard-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">        
+        <div style="background:white; width:700px; max-height:85vh; border-radius:8px; padding:20px; display:flex; flex-direction:column; box-shadow:0 4px 10px rgba(0,0,0,0.3);">            
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:15px;">                
+                <h3 style="margin:0; color:#004085;">📁 SFG Dashboard - Saved Drafts</h3>                
+                <button onclick="closeDashboardModal()" style="background:#dc3545; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">X</button>            
+            </div>            
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="text" id="dashboard-search" placeholder="Search files..." oninput="renderDashboardList()" style="flex:1; padding:6px; border:1px solid #ccc; border-radius:4px; font-size: 13px;">
+                <select id="dashboard-sort" onchange="renderDashboardList()" style="padding:6px; border:1px solid #ccc; border-radius:4px; font-size: 13px;">
+                    <option value="date-desc">Sort by Date (Newest)</option>
+                    <option value="date-asc">Sort by Date (Oldest)</option>
+                    <option value="name-asc">Sort by Name (A-Z)</option>
+                    <option value="name-desc">Sort by Name (Z-A)</option>
+                </select>
+            </div>
+            <div id="dashboard-drafts-list" style="overflow-y:auto; flex-grow:1; max-height:50vh; display:flex; flex-direction:column; gap:10px;"></div>            
+            <div style="border-top:1px solid #ddd; padding-top:10px; margin-top:15px; text-align:right;">                
+                <button onclick="closeDashboardModal()" style="background:#6c757d; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer; font-weight:bold;">Close</button>            
+            </div>        
+        </div>
+    </div>
+    <!-- Warning Modal -->    <div id="custom-warning-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10000; justify-content:center; align-items:center;">
+        <div style="background:white; width:400px; border-radius:10px; padding:25px; display:flex; flex-direction:column; box-shadow:0 6px 20px rgba(0,0,0,0.3); text-align:center;">
+            <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+            <h3 style="margin:0 0 10px 0; color:#dc3545; font-size: 20px;">Confirm Deletion</h3>
+            <p style="color:#555; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">Are you sure you want to completely delete this file?</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="warning-btn-yes" style="background:#dc3545; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px; flex:1;">Yes, Delete</button>
+                <button onclick="closeCustomWarningModal()" style="background:#6c757d; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px; flex:1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <!-- Alert Modal -->    <div id="custom-alert-modal">        <div class="custom-alert-box">            <h3 id="custom-alert-title" style="margin:0 0 10px 0; color:#004085; font-size: 18px;">Notice</h3>
+            <p id="custom-alert-message" style="color:#555; font-size: 14px; margin:0; line-height: 1.5;"></p>
+        </div>
+    </div>
+    <!-- DELIVERY ORDER MODAL -->    <div id="do-modal">        <div class="do-modal-content" id="do-pdf-area">            <div class="do-actions no-print">                <button onclick="downloadDoJPG()" style="background:#28a745; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold;">📥 Save JPG</button>                <button onclick="printDeliveryOrder()" style="background:#8b0000; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold;">🖨️ Print</button>                <button onclick="closeDeliveryOrderModal()" style="background:#dc3545; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold;">X Close</button>            </div>                        <div class="do-image-container">                <img src="image/Delivery Sheet.jpg" alt="Delivery Order Template">                                <div class="do-overlay do-company" id="do-out-company"></div>
+                <div class="do-overlay do-address" id="do-out-address"></div>
+                <div class="do-overlay do-subject" id="do-out-subject"></div>                                <div class="do-overlay do-date" id="do-out-date"></div>
+                <div class="do-overlay do-rdno" id="do-out-rdno"></div>
+                <div class="do-overlay do-dono" id="do-out-dono"></div>
+                <div class="do-overlay do-invoiceno" id="do-out-invoiceno"></div>
+                <div class="do-overlay do-prno" id="do-out-prno"></div>
+                <div class="do-overlay do-issuedate" id="do-out-issuedate"></div>
+                <div class="do-overlay do-status" id="do-order-status"></div>
+
+                <!-- Corrected Delivery Order Item Columns Alignment -->
+                <div id="do-items-container" style="position: absolute; top: 45%; left: 7.2%; width: 86.5%; font-size: 14px; font-weight: 700; color: #000000;"></div>
+            </div>
+        </div>
+        <!-- Second DO copy for top/bottom A4 printing (Hidden on screen modal, visible during print) -->
+        <div class="do-modal-content" id="do-pdf-area-2" style="display:none;">
+            <div class="do-image-container">                <img src="image/Delivery Sheet.jpg" alt="Delivery Order Template">                                <div class="do-overlay do-company" id="do-out-company-2"></div>
+                <div class="do-overlay do-address" id="do-out-address-2"></div>
+                <div class="do-overlay do-subject" id="do-out-subject-2"></div>                                <div class="do-overlay do-date" id="do-out-date-2"></div>
+                <div class="do-overlay do-rdno" id="do-out-rdno-2"></div>
+                <div class="do-overlay do-dono" id="do-out-dono-2"></div>
+                <div class="do-overlay do-invoiceno" id="do-out-invoiceno-2"></div>
+                <div class="do-overlay do-prno" id="do-out-prno-2"></div>
+                <div class="do-overlay do-issuedate" id="do-out-issuedate-2"></div>
+                <div class="do-overlay do-status" id="do-order-status-2"></div>
+
+                <div id="do-items-container-2" style="position: absolute; top: 45%; left: 7.2%; width: 86.5%; font-size: 14px; font-weight: 700; color: #000000;"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Quotation Preview Area -->    <div class="preview-container">
+        <div class="preview-header">
+            <div class="logo-section">
+                <div class="logo-top-badge" id="out-logo-badge">0000</div>
+                <img id="out-logo" src="image/logo01.png" alt="SFG Logo" class="logo-img">
+            </div>
+        </div>
+                <div class="preview-content">
+            <div class="info-grid">
+                <div class="customer-info-block">
+                    <div class="customer-details">
+                        <span id="out-address"></span>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <strong>Order Date:</strong> <span id="out-date"></span><br>
+                    <span id="out-cdate-container" style="display: none;"><strong>Complete Date:</strong> <span id="out-cdate"></span><br></span>
+                    <strong>PR No:</strong> <span id="out-pono"></span><br>
+                    <strong>Job Order No: <span id="out-rdno"></span></strong><br>
+                    <span id="out-qno-container" style="display: none;"><strong id="out-qno-lbl"> Quotation No:</strong> <span id="out-qno"></span></span>
+                </div>
+            </div>
+            <div class="subject-bar" id="out-subject"></div>
+                        <table id="quote-table">
+                <thead>
+                    <tr>
+                        <th class="col-desc">Description</th>
+                        <th class="col-size">Size</th>
+                        <th class="col-side">Side</th>
+                        <th class="col-qty">Qty</th>
+                        <th class="col-price text-right">Price (LKR)</th>
+                        <th class="col-total text-right">Total (LKR)</th>
+                    </tr>
+                </thead>
+                <tbody id="out-table-body"></tbody>
+            </table>
+            <div class="summary-container">
+                <div class="calculation-side">
+                    <div class="total-row" id="out-subtotal-row" style="display: none;">
+                        <span>Subtotal:</span>
+                        <span id="out-subtotal">0.00</span>
+                    </div>
+                    <div class="total-row" id="out-tax-row" style="display: none;">
+                        <span>Taxes:</span>
+                        <span id="out-tax">0.00</span>
+                    </div>
+                    <div class="total-row" id="out-advance-row" style="display: none;">
+                        <span>Advance Payment:</span>
+                        <span id="out-advance">0.00</span>
+                    </div>
+                    <div class="total-banner">
+                        <span>TOTAL AMOUNT:</span>
+                        <span id="out-total">LKR 0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 10px;">
+                <div class="footer-terms-wrap" id="out-terms-section" style="visibility: hidden;">
+                    <strong id="out-terms-title">TERMS & CONDITIONS</strong><br>
+                    <div id="out-terms-list"></div>
+                </div>
+                <div class="stamp-wrap" id="out-stamp-wrap">
+                    <img id="out-stamp" src="" alt="Stamp">
+                </div>
+            </div>
+        </div>
+        <div class="footer-signs">
+            <div id="qrcode-wrap">
+                <div id="qrcode"></div>
+            </div>
+            <div class="sign-block">
+                <p>Thanks & Regards,</p>
+                <img src="image/sign.png" alt="Signature" class="sign-img"><br>
+                <strong>H.D.Manushka Rukshan</strong><br>
+                SHEHANI FIBERGLASS WORKS
+            </div>
+        </div>
+        <img src="image/0123 copy.png" alt="Footer Contact Info" class="footer-banner-img">
+    </div>
+</div>
+
+    <!-- Quotation Details Settings Modal -->
+    <div id="settings-modal" onclick="if(event.target===this) closeSettingsModal()">
+        <div class="settings-modal-box">
+            <div class="settings-modal-head">
+                <h3>⚙️ Quotation Details Settings</h3>
+                <button type="button" class="settings-close" onclick="closeSettingsModal()">X</button>
+            </div>
+            <div class="settings-body">
+                <div class="settings-section">
+                    <div class="settings-section-title">Document Numbers</div>
+                    <div class="settings-grid">
+                        <div class="settings-field"><label>Quotation / Invoice No</label><input type="number" id="settings-q-no" min="0"></div>
+                        <div class="settings-field"><label>D.O No</label><input type="number" id="settings-do-no" min="0"></div>
+                    </div>
+                    <div class="settings-note">The selected number is used when a new document number is generated. Existing saved drafts are not changed.</div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">Customer & Address</div>
+                    <div class="settings-field" style="margin-bottom:10px;">
+                        <label>Customer</label>
+                        <div id="settings-customer-list"></div>
+                        <button type="button" class="settings-small-btn settings-add" onclick="addSettingsCustomer()">+ Add Customer</button>
+                    </div>
+                    <div class="settings-field">
+                        <label>Address</label>
+                        <div id="settings-address-list"></div>
+                        <button type="button" class="settings-small-btn settings-add" onclick="addSettingsAddress()">+ Add Address</button>
+                    </div>
+                    <div class="settings-note">Edit an existing entry directly, or add a new customer/address. Changes are saved in this browser.</div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">TERMS & CONDITIONS — Add New</div>
+                    <div id="settings-terms-list"></div>
+                    <button type="button" class="settings-small-btn settings-add" onclick="addSettingsTerm()">+ Add Term</button>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">NOTICE / NOTES — Add New</div>
+                    <div id="settings-notes-list"></div>
+                    <button type="button" class="settings-small-btn settings-add" onclick="addSettingsNote()">+ Add Note</button>
+                </div>
+
+                <div class="settings-footer">
+                    <button type="button" class="settings-cancel" onclick="closeSettingsModal()">Cancel</button>
+                    <button type="button" class="settings-save" onclick="saveSettings()">💾 Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>    
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw14bM6eMeLGTZHqVurS-KuNJceCjj-BZujvAbHqzEG7Ic5i3SJetSuEJv7anw5rRodzg/exec";
+    let defaultTitle = document.title;
+    let currentDocType = 'QUOTATION';
+    let autoSaveTimer = null;
+    let currentDraftKey = null;
+    let isLoadingDraft = false;
+
+    // Global D.O. Number Management (Starts at 300, ensures absolute uniqueness across all quotations)
+    function getNextDONumber() {
+        let lastDO = parseInt(localStorage.getItem('sfg_last_do_number'));
+        if (isNaN(lastDO)) {
+            const st = getSettings();
+            const configured = parseInt(st.doNumber);
+            lastDO = isNaN(configured) ? 299 : configured - 1;
+        }
+
+        let maxExisting = lastDO;
+        document.querySelectorAll('.i-dono').forEach(input => {
+            let val = parseInt(input.value);
+            if (!isNaN(val) && val > maxExisting) maxExisting = val;
+        });
+
+        let nextDO = maxExisting + 1;
+        localStorage.setItem('sfg_last_do_number', String(nextDO));
+        return nextDO;
+    }
+
+    // Global Quotation Number Management (Starts at 1000, ensures absolute uniqueness across all quotations)
+    function getNextQuotationNumber() {
+        let nextQ = parseInt(localStorage.getItem(QUOTATION_NUMBER_KEY), 10);
+        if (!Number.isFinite(nextQ) || nextQ < 1) {
+            const legacy = parseInt(localStorage.getItem('sfg_last_document_number'), 10);
+            const configured = parseInt(getSettings().quotationNumber, 10);
+            nextQ = Number.isFinite(legacy) ? legacy + 1 : (Number.isFinite(configured) ? configured : 1000);
+        }
+        localStorage.setItem('sfg_last_document_number', String(nextQ));
+        localStorage.setItem('sfg_last_quotation_number', String(nextQ));
+        localStorage.setItem('sfg_last_invoice_number', String(nextQ));
+        localStorage.setItem(QUOTATION_NUMBER_KEY, String(nextQ + 1));
+        return String(nextQ);
+    }
+
+    function onDeliveryDateInput(inputEl) {
+        const entry = inputEl.closest('.item-entry');
+        if (entry) {
+            const doInput = entry.querySelector('.i-dono');
+            if (doInput && !doInput.value.trim() && inputEl.value.trim() !== "") {
+                doInput.value = getNextDONumber();
+            }
+        }
+        sync();
+        checkAutoSave();
+        checkItemDOStatus(entry);
+    }
+
+    function showCustomAlert(message, title = "Notice") {        
+        const modal = document.getElementById('custom-alert-modal');
+        const titleEl = document.getElementById('custom-alert-title');
+        const msgEl = document.getElementById('custom-alert-message');
+        if (!modal || !msgEl || !titleEl) return;
+        titleEl.innerText = title;
+        msgEl.innerText = message;
+        modal.style.display = 'flex';
+        setTimeout(() => { modal.style.display = 'none'; }, 1800);
+    }
+
+    function checkAutoSave() {        
+        const rdVal = getVal('in-rdno').trim();
+        const subjectVal = getVal('in-subject').trim();
+        if (rdVal !== "" && subjectVal !== "") {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => { saveDraftAutoSilent(); }, 500);
+        }
+    }
+
+    function setDocType(type) {        
+        currentDocType = type;
+        document.body.classList.toggle('invoice-design', type === 'INVOICE');
+        const btnQ = document.getElementById('btn-doc-quotation');
+        const btnI = document.getElementById('btn-doc-invoice');
+        const qTerms = document.getElementById('quotation-terms-box');
+        const iTerms = document.getElementById('invoice-terms-box');
+                
+        if(type === 'QUOTATION') {
+            if(btnQ) btnQ.classList.add('active');
+            if(btnI) btnI.classList.remove('active');
+            if(qTerms) qTerms.style.display = 'block';
+            if(iTerms) iTerms.style.display = 'none';
+        } else {
+            if(btnI) btnI.classList.add('active');
+            if(btnQ) btnQ.classList.remove('active');
+            if(qTerms) qTerms.style.display = 'none';
+            if(iTerms) iTerms.style.display = 'block';
+        }
+        sync();
+    }
+
+    function getVal(id) {        
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    }
+
+    function formatDate(val) {        
+        if (!val) return '';
+        const parts = val.split('-');
+        if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        return val;
+    }
+
+    function setTodaysDate() {        
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const inDate = document.getElementById('in-date');
+        if(inDate && !inDate.value) inDate.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    function triggerPDF() {        
+        saveDraftAuto();
+        const rd = getVal('in-rdno') || "No-RD";
+        const subject = getVal('in-subject') || "No-Subject";
+        const rawDate = getVal('in-date');
+        const dateStr = rawDate ? formatDate(rawDate).replace(/\//g, "-") : "No-Date";
+        document.title = `RD ${rd} - ${subject} (${dateStr})`;
+        window.print();
+        setTimeout(() => { document.title = defaultTitle; }, 1000);
+    }
+
+    function printDeliveryOrder() {
+        document.body.classList.add('print-do-mode');
+        setTimeout(() => {
+            window.print();
+            document.body.classList.remove('print-do-mode');
+        }, 150);
+    }
+
+    function downloadDoJPG() {        
+        const rd = getVal('in-rdno') || "No-RD";
+        const dono = document.getElementById('do-out-dono').innerText || "No-DO";
+        const subject = getVal('in-subject') || "No-Subject";
+        const rawDate = getVal('in-date');
+        const dateStr = rawDate ? formatDate(rawDate).replace(/\//g, "-") : "No-Date";
+        
+        const filename = `${rd} - ${dono} - ${subject} - ${dateStr}.jpg`;
+
+        let tempContainer = document.createElement('div');
+        tempContainer.style.position = 'fixed';
+        tempContainer.style.top = '-9999px';
+        tempContainer.style.left = '-9999px';
+        tempContainer.style.width = '210mm';
+        tempContainer.style.height = '297mm';
+        tempContainer.style.backgroundColor = '#ffffff';
+        tempContainer.style.boxSizing = 'border-box';
+        tempContainer.style.overflow = 'hidden';
+
+        let sheet1 = document.getElementById('do-pdf-area').cloneNode(true);
+        sheet1.style.position = 'absolute';
+        sheet1.style.top = '0';
+        sheet1.style.left = '0';
+        sheet1.style.width = '210mm';
+        sheet1.style.height = '148.5mm';
+        sheet1.style.transform = 'none';
+        sheet1.style.margin = '0';
+        sheet1.style.boxShadow = 'none';
+        sheet1.style.border = 'none';
+        sheet1.style.display = 'flex';
+        
+        let sheet2 = document.getElementById('do-pdf-area-2').cloneNode(true);
+        sheet2.style.position = 'absolute';
+        sheet2.style.top = '148.5mm';
+        sheet2.style.left = '0';
+        sheet2.style.width = '210mm';
+        sheet2.style.height = '148.5mm';
+        sheet2.style.transform = 'none';
+        sheet2.style.margin = '0';
+        sheet2.style.boxShadow = 'none';
+        sheet2.style.border = 'none';
+        sheet2.style.display = 'flex';
+
+        let actions1 = sheet1.querySelector('.do-actions');
+        if(actions1) actions1.remove();
+        let actions2 = sheet2.querySelector('.do-actions');
+        if(actions2) actions2.remove();
+
+        tempContainer.appendChild(sheet1);
+        tempContainer.appendChild(sheet2);
+        document.body.appendChild(tempContainer);
+
+        html2canvas(tempContainer, { scale: 2, useCORS: true }).then(canvas => {
+            let link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/jpeg', 1.0);
+            link.click();
+            document.body.removeChild(tempContainer);
+        });
+    }
+
+    function handleStamp(event) {        
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('out-stamp');
+                if(img) { img.src = e.target.result; img.style.display = 'block'; }
+                sync();
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function deleteStamp() {        
+        const img = document.getElementById('out-stamp');
+        if(img) { img.src = ""; img.style.display = 'none'; }
+        const fileIn = document.getElementById('in-stamp-file');
+        if(fileIn) fileIn.value = "";
+        sync();
+    }
+
+    function checkItemDOStatus(entry) {        
+        const delDateInput = entry.querySelector('.i-del-date');
+        const doNoInput = entry.querySelector('.i-dono');
+        const doBtn = entry.querySelector('.btn-do-generate');
+
+        if (delDateInput && doNoInput && doBtn) {
+            const hasDelDate = delDateInput.value.trim() !== "";
+            const hasDoNo = doNoInput.value.trim() !== "";
+            if (hasDelDate && hasDoNo) {
+                doBtn.disabled = false;
+                doBtn.style.background = '#28a745';
+            } else {
+                doBtn.disabled = true;
+                doBtn.style.background = '#6c757d';
+            }
+        }
+    }
+
+    function checkAllItemDOStatus() {        
+        document.querySelectorAll('.item-entry').forEach(entry => { checkItemDOStatus(entry); });
+    }
+
+    function openDeliveryOrder(btn) {        
+        const entry = btn.closest('.item-entry');
+        if (!entry) return;
+
+        const allEntries = Array.from(document.querySelectorAll('.item-entry'));
+        const isLastItem = (allEntries[allEntries.length - 1] === entry);
+
+        const doNo = entry.querySelector('.i-dono').value;
+        const itemDelDateVal = entry.querySelector('.i-del-date') ? formatDate(entry.querySelector('.i-del-date').value) : '';
+        const customerVal = getVal('in-address');
+        const addressVal = getVal('in-cust-addr');
+        let rawRdNo = getVal('in-rdno').trim();
+        const rdNoVal = rawRdNo ? (rawRdNo.toLowerCase().startsWith('rd') ? rawRdNo : `RD ${rawRdNo}`) : '';
+        const prNoVal = getVal('in-pono');
+        const subjectVal = getVal('in-subject');
+        const qNoVal = getVal('in-qno');
+
+        document.getElementById('do-out-company').innerText = customerVal;
+        document.getElementById('do-out-address').innerText = addressVal;
+        document.getElementById('do-out-subject').innerText = subjectVal;
+        document.getElementById('do-out-date').innerText = itemDelDateVal;
+        document.getElementById('do-out-rdno').innerText = rdNoVal;
+        document.getElementById('do-out-dono').innerText = doNo;
+        document.getElementById('do-out-issuedate').innerText = itemDelDateVal;
+        
+        document.getElementById('do-out-company-2').innerText = customerVal;
+        document.getElementById('do-out-address-2').innerText = addressVal;
+        document.getElementById('do-out-subject-2').innerText = subjectVal;
+        document.getElementById('do-out-date-2').innerText = itemDelDateVal;
+        document.getElementById('do-out-rdno-2').innerText = rdNoVal;
+        document.getElementById('do-out-dono-2').innerText = doNo;
+        document.getElementById('do-out-issuedate-2').innerText = itemDelDateVal;
+        
+        const statusEl = document.getElementById('do-order-status');
+        const statusEl2 = document.getElementById('do-order-status-2');
+        if (statusEl) {
+            statusEl.innerText = isLastItem ? 'COMPLETED' : 'In Progress';
+            statusEl.style.color = isLastItem ? '#880808' : '#004085';
+        }
+        if (statusEl2) {
+            statusEl2.innerText = isLastItem ? 'COMPLETED' : 'In Progress';
+            statusEl2.style.color = isLastItem ? '#880808' : '#004085';
+        }
+        
+        const invNoEl = document.getElementById('do-out-invoiceno');
+        const prNoEl = document.getElementById('do-out-prno');
+        const invNoEl2 = document.getElementById('do-out-invoiceno-2');
+        const prNoEl2 = document.getElementById('do-out-prno-2');
+        
+        if (currentDocType === 'INVOICE') {
+            if(invNoEl) { invNoEl.innerText = qNoVal; invNoEl.style.display = 'block'; }
+            if(prNoEl) { prNoEl.innerText = prNoVal; prNoEl.style.display = 'block'; }
+            if(invNoEl2) { invNoEl2.innerText = qNoVal; invNoEl2.style.display = 'block'; }
+            if(prNoEl2) { prNoEl2.innerText = prNoVal; prNoEl2.style.display = 'block'; }
+        } else {
+            if(invNoEl) invNoEl.style.display = 'none';
+            if(prNoEl) prNoEl.style.display = 'none';
+            if(invNoEl2) invNoEl2.style.display = 'none';
+            if(prNoEl2) prNoEl2.style.display = 'none';
+        }
+
+        const desc = entry.querySelector('.i-desc') ? entry.querySelector('.i-desc').value : '';
+        const size = entry.querySelector('.i-size') ? entry.querySelector('.i-size').value : '';
+        const l = entry.querySelector('.i-left') ? entry.querySelector('.i-left').checked : false;
+        const r = entry.querySelector('.i-right') ? entry.querySelector('.i-right').checked : false;
+        const qty = entry.querySelector('.i-qty') ? (parseFloat(entry.querySelector('.i-qty').value) || 0) : 0;
+        let side = l && r ? "Pair" : (l ? "L" : (r ? "R" : "-"));
+
+        const itemsHTML = `
+            <div style="display: flex; align-items: center; padding: 4px 0;">
+                <div style="width: 57%;"><span>${desc}</span></div>
+                <div style="width: 15%; transform: translateX(76px); text-align: left;"><span>${size}</span></div>
+                <div style="width: 14%; text-align: center;"><span>${side}</span></div>
+                <div style="width: 14%; text-align: center;"><span>${qty > 0 ? qty.toString().padStart(2, '0') : ''}</span></div>
+            </div>
+        `;
+
+        document.getElementById('do-items-container').innerHTML = itemsHTML;
+        document.getElementById('do-items-container-2').innerHTML = itemsHTML;
+        document.getElementById('do-modal').style.display = 'flex';
+    }
+
+    function closeDeliveryOrderModal() {        
+        document.getElementById('do-modal').style.display = 'none';
+    }
+
+    function addItem(data = null) {        
+        const list = document.getElementById('items-list');
+        if(!list) return;
+
+        let assignedDoNo = data ? data.doNo : '';
+
+        const div = document.createElement('div');
+        div.className = 'item-entry';
+        div.innerHTML = `
+            <input type="text" class="i-desc" placeholder="Item Description" style="width: 95%; margin-bottom: 3px; font-size: 12px;" value="${data ? data.desc : ''}" oninput="sync(); checkAutoSave();">
+            <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                <input type="date" class="i-del-date" placeholder="Delivery Date" style="width: 48%; font-size: 11px;" value="${data ? data.delDate : ''}" oninput="onDeliveryDateInput(this)" onchange="onDeliveryDateInput(this)">
+                <input type="text" class="i-dono" placeholder="D.O No" style="width: 48%; font-size: 11px;" value="${assignedDoNo}" oninput="sync(); checkAutoSave(); checkAllItemDOStatus();">
+            </div>
+            <div style="display:flex; gap: 8px; align-items: center; font-size: 12px; flex-wrap: wrap;">
+                <div>Size: <input type="text" class="i-size" style="width: 45px;" value="${data ? data.size : ''}" oninput="sync(); checkAutoSave();"></div>
+                <div class="hand-icons">
+                    <span class="hand-box"><input type="checkbox" class="i-left" ${data && data.l ? 'checked' : ''} onchange="sync(); checkAutoSave();"> L</span>
+                    <span class="hand-box"><input type="checkbox" class="i-right" ${data && data.r ? 'checked' : ''} onchange="sync(); checkAutoSave();"> R</span>
+                </div>
+                <div>Qty: <input type="number" class="i-qty" style="width: 40px;" value="${data ? data.qty : ''}" oninput="sync(); checkAutoSave();"></div>
+                <div style="display:flex; align-items:center; gap:4px;">Price: <input type="number" class="i-price" style="width: 70px;" value="${data ? data.price : ''}" oninput="sync(); checkAutoSave();"></div>
+                <button type="button" class="btn-do-generate" disabled onclick="openDeliveryOrder(this)" style="padding:2px 6px; font-size:10px; cursor:pointer; background:#6c757d; color:white; border:none; border-radius:3px;">Delivery Order</button>
+            </div>`;
+        list.appendChild(div);
+        checkItemDOStatus(div);
+        sync();
+    }
+
+    function delItem() {        
+        const entries = document.querySelectorAll('.item-entry');
+        if(entries.length > 1) entries[entries.length-1].remove();
+        sync();
+        checkAutoSave();
+    }
+
+    function generateQNo() {        
+        const qnoIn = document.getElementById('in-qno');
+        const qnoOut = document.getElementById('out-qno');
+        const logoBadge = document.getElementById('out-logo-badge');
+        
+        if (qnoIn && !qnoIn.value.trim()) {
+            qnoIn.value = getNextQuotationNumber();
+        }
+        
+        let finalNo = qnoIn ? qnoIn.value : '1000';
+        if(qnoOut) qnoOut.innerText = finalNo;
+        if(logoBadge) logoBadge.innerText = finalNo;
+    }
+
+    function sync() {        
+        generateQNo();
+        checkAllItemDOStatus();
+        const lblQno = document.getElementById('lbl-qno');
+        const outQnoLbl = document.getElementById('out-qno-lbl');
+        const btnPrint = document.getElementById('btn-print');
+        const outLogo = document.getElementById('out-logo');
+
+        // Sync Request Name automatically between quotation and invoice inputs
+        const reqNameVal = document.getElementById('in-req-name').value;
+        const invReqNameEl = document.getElementById('inv-req-name');
+        if (invReqNameEl && invReqNameEl.value !== reqNameVal) {
+            invReqNameEl.value = reqNameVal;
+        }
+
+        // Invoice NOTICE / NOTES checkboxes remain independent.
+        if (!isLoadingDraft && currentDocType === 'QUOTATION') {
+            const invAdvVal = document.getElementById('inv-adv-val');
+            const inAdvVal = document.getElementById('in-adv-val');
+            if (invAdvVal && inAdvVal) invAdvVal.value = inAdvVal.value;
+        }
+        applyCustomTermsAndNotes(false);
+
+        if(currentDocType === 'INVOICE') {            
+            if(lblQno) lblQno.innerText = "Invoice No:";
+            if(outQnoLbl) outQnoLbl.innerText = "Invoice No:";
+            if(outLogo) outLogo.src = "image/logo02.png";
+        } else {            
+            if(lblQno) lblQno.innerText = "Quotation No:";
+            if(outQnoLbl) outQnoLbl.innerText = "Quotation No:";
+            if(outLogo) outLogo.src = "image/logo01.png";
+        }
+        
+        const outDate = document.getElementById('out-date');
+        if(outDate) outDate.innerText = formatDate(getVal('in-date'));
+        
+        const cdateVal = getVal('in-cdate');
+        const outCDate = document.getElementById('out-cdate');
+        const outCDateContainer = document.getElementById('out-cdate-container');
+        if(outCDate) outCDate.innerText = formatDate(cdateVal);
+        if(outCDateContainer) outCDateContainer.style.display = (cdateVal.trim() !== "" && currentDocType === 'INVOICE') ? 'inline' : 'none';
+
+        let rawName = getVal('in-address').trim();
+        let rawCustAddr = getVal('in-cust-addr').trim();
+        let formattedAddr = "";
+        if (rawName !== "" || rawCustAddr !== "") {
+            formattedAddr = `<strong>Customer:</strong> <strong style="font-size: 17px;">${rawName}</strong>`;
+            if (rawCustAddr !== "") {
+                let formattedCustAddr = rawCustAddr.replace("LTD,", "LTD,<br>");
+                formattedAddr += `<br><strong>Address:</strong> <span style="font-weight: normal; font-size: 14px;">${formattedCustAddr}</span>`;
+            }
+        } else {
+            formattedAddr = `<strong>Customer:</strong>`;
+        }
+
+        const outAddr = document.getElementById('out-address');
+        if(outAddr) outAddr.innerHTML = formattedAddr;
+        
+        let rawRdNo = getVal('in-rdno').trim();
+        const outRdno = document.getElementById('out-rdno');
+        if(outRdno) outRdno.innerText = rawRdNo ? (rawRdNo.toLowerCase().startsWith('rd') ? rawRdNo : `RD ${rawRdNo}`) : '';
+        
+        const outPono = document.getElementById('in-pono');
+        const outPonoDisplay = document.getElementById('out-pono');
+        if(outPonoDisplay) outPonoDisplay.innerText = outPono.value;
+        
+        const outSubj = document.getElementById('in-subject');
+        if(outSubj) {
+            const outSubjDisplay = document.getElementById('out-subject');
+            if(outSubjDisplay) outSubjDisplay.innerText = outSubj.value;
+        }
+        
+        const chkQNo = document.getElementById('chk-show-qno');
+        const outQNoContainer = document.getElementById('out-qno-container');
+        if(outQNoContainer && chkQNo) outQNoContainer.style.display = chkQNo.checked ? 'inline' : 'none';
+
+        const tableBody = document.getElementById('out-table-body');
+        if(tableBody) {
+            tableBody.innerHTML = '';
+            let subtotal = 0;
+            const entries = document.querySelectorAll('.item-entry');
+            let activeItems = [];
+            entries.forEach(entry => {
+                const desc = entry.querySelector('.i-desc')?.value || '';
+                const qty = entry.querySelector('.i-qty') ? (parseFloat(entry.querySelector('.i-qty').value) || 0) : 0;
+                if(desc || qty) activeItems.push(entry);
+            });
+
+            activeItems.forEach((entry) => {
+                const desc = entry.querySelector('.i-desc') ? entry.querySelector('.i-desc').value : '';
+                const rawDelDate = entry.querySelector('.i-del-date') ? entry.querySelector('.i-del-date').value.trim() : '';
+                const delDate = formatDate(rawDelDate);
+                const doNo = entry.querySelector('.i-dono') ? entry.querySelector('.i-dono').value.trim() : '';
+                const size = entry.querySelector('.i-size') ? entry.querySelector('.i-size').value : '';
+                const l = entry.querySelector('.i-left') ? entry.querySelector('.i-left').checked : false;
+                const r = entry.querySelector('.i-right') ? entry.querySelector('.i-right').checked : false;
+                const qty = entry.querySelector('.i-qty') ? (parseFloat(entry.querySelector('.i-qty').value) || 0) : 0;
+                const price = entry.querySelector('.i-price') ? (parseFloat(entry.querySelector('.i-price').value) || 0) : 0;
+                let side = l && r ? "Pair" : (l ? "L" : (r ? "R" : "-"));
+                let rowTotal = qty * price;
+                subtotal += rowTotal;
+
+                let finalDescHTML = desc;
+                if (currentDocType === 'INVOICE' && (delDate !== '' || doNo !== '')) {
+                    let extraText = [];
+                    if (delDate !== '') extraText.push(`Delivery Date: <span style="color: black; font-weight: bold;">${delDate}</span>`);
+                    if (doNo !== '') extraText.push(`D.O No: <span style="color: black; font-weight: bold;">${doNo}</span>`);
+                    finalDescHTML += `<br><span style="font-size: 11px; color: #555;">${extraText.join(' | ')}</span>`;
+                }
+
+                let currentPadding = currentDocType === 'INVOICE' ? "4px 8px" : "12px 8px";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td style="padding: ${currentPadding}">${finalDescHTML}</td>
+                                <td style="padding: ${currentPadding}">${size}</td>
+                                <td style="padding: ${currentPadding}">${side}</td>
+                                <td style="padding: ${currentPadding}">${qty.toString().padStart(2, '0')}</td>
+                                <td style="padding: ${currentPadding}" class="text-right">${price.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                                <td style="padding: ${currentPadding}" class="text-right">${rowTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>`;
+                tableBody.appendChild(tr);
+            });
+
+            const stampWrap = document.getElementById('out-stamp-wrap');
+            if (stampWrap) {
+                stampWrap.style.display = (currentDocType === 'INVOICE' && activeItems.length > 5) ? 'none' : 'flex';
+            }
+
+            const chkTax = document.getElementById('chk-show-tax');
+            const showTax = chkTax ? chkTax.checked : false;
+            const taxVal = parseFloat(getVal('in-tax')) || 0;
+            let advanceVal = currentDocType === 'INVOICE' ? (parseFloat(getVal('inv-advance-amount')) || 0) : 0;
+            const totalAmountNum = subtotal + (showTax ? taxVal : 0) - advanceVal;
+                                        
+            const outSubtotalRow = document.getElementById('out-subtotal-row');
+            if(outSubtotalRow) outSubtotalRow.style.display = (currentDocType === 'INVOICE') ? 'flex' : 'none';
+            const outSubtotal = document.getElementById('out-subtotal');
+            if(outSubtotal) outSubtotal.innerText = subtotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+            const outTaxRow = document.getElementById('out-tax-row');
+            if(outTaxRow) outTaxRow.style.display = showTax ? 'flex' : 'none';
+            const outTax = document.getElementById('out-tax');
+            if(outTax) outTax.innerText = taxVal.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+            const outAdvanceRow = document.getElementById('out-advance-row');
+            if(outAdvanceRow) outAdvanceRow.style.display = (currentDocType === 'INVOICE' && advanceVal > 0) ? 'flex' : 'none';
+            const outAdvance = document.getElementById('out-advance');
+            if(outAdvance) outAdvance.innerText = "-" + advanceVal.toLocaleString(undefined, {minimumFractionDigits: 2});
+                        
+            const outTotal = document.getElementById('out-total');
+            if(outTotal) outTotal.innerText = "LKR " + totalAmountNum.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+            const termsList = document.getElementById('out-terms-list');
+            const termsSection = document.getElementById('out-terms-section');
+            const termsTitle = document.getElementById('out-terms-title');
+            if(termsList && termsSection) {
+                termsList.innerHTML = '';
+                let hasTerms = false;
+                if (currentDocType === 'QUOTATION') {
+                    if(termsTitle) termsTitle.innerText = "TERMS & CONDITIONS";
+                    const qChecks = [
+                        ['chk-est', 'Above information is an estimate of goods / services'],
+                        ['chk-req', `At the Request of Mr. ${getVal('in-req-name')}`],
+                        ['chk-price', 'Pricing Including of all material charges.'],
+                        ['chk-adv', `Please give ${getVal('in-adv-val')}% Advance payment.`]
+                    ];
+                    qChecks.forEach(([id,text]) => { const el=document.getElementById(id); if(el && el.checked){ termsList.innerHTML += '• '+text+'<br>'; hasTerms=true; } });
+                    document.querySelectorAll('#custom-quotation-terms input[type="checkbox"]').forEach(el => { if(el.checked){ termsList.innerHTML += '• '+(el.dataset.text||'')+'<br>'; hasTerms=true; } });
+                } else {
+                    if(termsTitle) termsTitle.innerText = "NOTICE / NOTES";
+                    const iChecks = [
+                        ['inv-chk-1', 'Above information is an estimate of goods / services'],
+                        ['inv-chk-2', `At the Request of Mr. ${getVal('inv-req-name')}`],
+                        ['inv-chk-3', 'Pricing Including of all material charges.'],
+                        ['inv-chk-4', `An advance payment of ${getVal('inv-adv-val')}% has been received for this order.`]
+                    ];
+                    iChecks.forEach(([id,text]) => { const el=document.getElementById(id); if(el && el.checked){ termsList.innerHTML += '• '+text+'<br>'; hasTerms=true; } });
+                    document.querySelectorAll('#custom-invoice-notes input[type="checkbox"]').forEach(el => { if(el.checked){ termsList.innerHTML += '• '+(el.dataset.text||'')+'<br>'; hasTerms=true; } });
+                }
+                termsSection.style.visibility = hasTerms ? 'visible' : 'hidden';
+            }
+
+            const chkQr = currentDocType === 'INVOICE' ? document.getElementById('inv-chk-show-qr') : document.getElementById('chk-show-qr');
+            const qrWrap = document.getElementById('qrcode-wrap');
+            if (chkQr && chkQr.checked && qrWrap) {
+                qrWrap.style.visibility = 'visible';
+                updateQRCode(buildBarcodeText(totalAmountNum));
+            } else if(qrWrap) {
+                qrWrap.style.visibility = 'hidden';
+            }
+        }
+    }
+
+    function updateQRCode(text) {        
+        const qrContainer = document.getElementById("qrcode");
+        if(!qrContainer) return;
+        qrContainer.innerHTML = "";
+        try { new QRCode(qrContainer, { text: text, width: 115, height: 115 }); } catch(e) {}
+    }
+
+    function calculateSavedTotalAmount(d) {
+        let subtotal = 0;
+        (d.items || []).forEach(item => {
+            const qty = parseFloat(item.qty) || 0;
+            const price = parseFloat(item.price) || 0;
+            subtotal += qty * price;
+        });
+        const showTax = !!(d.fields && d.fields['chk-show-tax'] && d.fields['chk-show-tax'].checked);
+        const taxVal = showTax ? (parseFloat(d.tax) || 0) : 0;
+        const advanceVal = String(d.docType || '').toUpperCase() === 'INVOICE'
+            ? (parseFloat(d.fields?.['inv-advance-amount']?.value) || 0) : 0;
+        return subtotal + taxVal - advanceVal;
+    }
+
+    function updateDraftDropdown() {        
+        const select = document.getElementById('draft-select');
+        if (!select) return;
+        select.innerHTML = '<option value="">-- Select Saved Draft --</option>';
+        let drafts = JSON.parse(localStorage.getItem('sfg_all_drafts') || '{}');
+        let uniqueMap = new Map();
+        for (let key in drafts) {
+            if (['0', '1', '2', '3', '4', '5'].includes(key)) continue;
+            let dData = drafts[key];
+            let uniqueKey = (dData.rdno || '') + '_' + (dData.qno || '');
+            if (!uniqueMap.has(uniqueKey)) uniqueMap.set(uniqueKey, { key: key, data: dData });
+        }
+        uniqueMap.forEach((item) => {
+            let opt = document.createElement('option');
+            opt.value = item.key;
+            opt.textContent = `${item.data.qno || 'No No'} - RD ${item.data.rdno || 'No RD'} - ${(item.data.subject || 'No Subject').substring(0,40)} - ${item.data.date || 'No Date'}`;
+            let hasCompleteDate = item.data.cdate && item.data.cdate.trim() !== "";
+            opt.style.color = hasCompleteDate ? 'green' : 'red';
+            select.appendChild(opt);
+        });
+    }
+
+    function openDashboardModal() {        
+        document.getElementById('dashboard-modal').style.display = 'flex';
+        const searchInput = document.getElementById('dashboard-search');
+        if(searchInput) searchInput.value = '';
+        renderDashboardList();
+    }
+
+    function renderDashboardList() {
+        let listContainer = document.getElementById('dashboard-drafts-list');
+        if(!listContainer) return;
+        listContainer.innerHTML = '';
+        
+        let drafts = JSON.parse(localStorage.getItem('sfg_all_drafts') || '{}');
+        let itemsArray = [];
+        for (let key in drafts) {
+            if (['0', '1', '2', '3', '4', '5'].includes(key)) continue;
+            itemsArray.push({ key: key, data: drafts[key] });
+        }
+
+        let searchQuery = (document.getElementById('dashboard-search')?.value || '').toLowerCase();
+        if(searchQuery) {
+            itemsArray = itemsArray.filter(item => {
+                let label = (item.data.label || item.key).toLowerCase();
+                let date = (item.data.date || '').toLowerCase();
+                let rd = (item.data.rdno || '').toLowerCase();
+                let qn = (item.data.qno || '').toLowerCase();
+                return label.includes(searchQuery) || rd.includes(searchQuery) || qn.includes(searchQuery) || date.includes(searchQuery);
+            });
+        }
+
+        let sortBy = document.getElementById('dashboard-sort')?.value || 'date-desc';
+        itemsArray.sort((a, b) => {
+            let dateA = a.data.date || '';
+            let dateB = b.data.date || '';
+            let nameA = (a.data.label || a.key).toLowerCase();
+            let nameB = (b.data.label || b.key).toLowerCase();
+
+            if (sortBy === 'date-desc') {
+                return dateB.localeCompare(dateA);
+            } else if (sortBy === 'date-asc') {
+                return dateA.localeCompare(dateB);
+            } else if (sortBy === 'name-asc') {
+                return nameA.localeCompare(nameB);
+            } else if (sortBy === 'name-desc') {
+                return nameB.localeCompare(nameA);
+            }
+            return 0;
+        });
+
+        itemsArray.forEach((item, index) => {
+            let numStr = String(index + 1).padStart(2, '0');
+            let d = item.data;
+            let key = item.key;
+            let hasCompleteDate = d.cdate && d.cdate.trim() !== "";
+            let textColor = hasCompleteDate ? 'green' : 'red';
+            let card = document.createElement('div');
+            card.style = "background: #e0f2fe; border: 1px solid #ccc; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;";
+            card.innerHTML = `<div><strong style="color: ${textColor};">${numStr}. ${d.label || key}</strong><br><small>Date: ${d.date || 'N/A'} | RD No: ${d.rdno || 'N/A'} | No: ${d.qno || 'N/A'}</small></div>
+                              <div style="display: flex; gap: 5px;">
+                                  <button onclick="openDraftFromDashboard('${key.replace(/'/g, "\\'")}')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">Open</button>
+                                  <button onclick="deleteDraftFromDashboard('${key.replace(/'/g, "\\'")}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">Delete</button>
+                              </div>`;
+            listContainer.appendChild(card);
+        });
+
+        if(itemsArray.length === 0) {
+            listContainer.innerHTML = '<div style="text-align: center; color: #777; padding: 20px;">No files found.</div>';
+        }
+    }
+
+    function closeDashboardModal() { document.getElementById('dashboard-modal').style.display = 'none'; }
+
+    function openDraftFromDashboard(key) {
+        let drafts = JSON.parse(localStorage.getItem('sfg_all_drafts') || '{}');
+        const data = drafts[key];
+        if (!data) return;
+        currentDraftKey = key;
+        localStorage.setItem('sfg_current_draft_key', key);
+        isLoadingDraft = true;
+        setDocType(data.docType || 'QUOTATION');
+        const basic = {'in-date':data.date||'', 'in-cdate':data.cdate||'', 'in-address':data.address||'', 'in-cust-addr':data.custAddr||'', 'in-pono':data.pono||'', 'in-rdno':data.rdno||'', 'in-qno':data.qno||'', 'in-subject':data.subject||'', 'in-tax':data.tax||'0'};
+        Object.entries(basic).forEach(([id,v])=>{const el=document.getElementById(id); if(el) el.value=v;});
+        const list=document.getElementById('items-list'); list.innerHTML='';
+        if(data.items && data.items.length) data.items.forEach(item=>addItem(item)); else addItem();
+        if(data.fields) Object.entries(data.fields).forEach(([id,d])=>{const el=document.getElementById(id); if(!el || el.closest('#settings-modal')) return; if(d.type==='checkbox'||d.type==='radio') el.checked=!!d.checked; else if(id!=='in-qno') el.value=d.value ?? el.value;});
+        const savedStamp=document.getElementById('out-stamp'); if(savedStamp){ if(data.stampSrc){savedStamp.src=data.stampSrc;savedStamp.style.display='block';} else {savedStamp.src='';savedStamp.style.display='none';} }
+        applyCustomTermsAndNotes(true);
+        isLoadingDraft = false;
+        sync();
+        saveAllFormState();
+        closeDashboardModal();
+    }
+
+    function deleteDraftFromDashboard(key) {
+        showCustomWarning(() => {
+            let drafts = JSON.parse(localStorage.getItem('sfg_all_drafts') || '{}');
+            delete drafts[key];
+            localStorage.setItem('sfg_all_drafts', JSON.stringify(drafts));
+            updateDraftDropdown();
+            renderDashboardList();
+            showCustomAlert("Deleted successfully!", "Success");
+        });
+    }
+
+    function showCustomWarning(callback) {        
+        const warningModal = document.getElementById('custom-warning-modal');
+        const yesBtn = document.getElementById('warning-btn-yes');
+        warningModal.style.display = 'flex';
+        let newBtn = yesBtn.cloneNode(true);
+        yesBtn.parentNode.replaceChild(newBtn, yesBtn);
+        newBtn.onclick = () => { warningModal.style.display = 'none'; callback(); };
+    }
+
+    function closeCustomWarningModal() { document.getElementById('custom-warning-modal').style.display = 'none'; }
+
+    function promptDeleteSelectedDraft() {        
+        const select = document.getElementById('draft-select');
+        const key = select ? select.value : '';
+        if (!key) return showCustomAlert("Please select a draft!", "Notice");
+        showCustomWarning(() => {
+            let drafts = JSON.parse(localStorage.getItem('sfg_all_drafts') || '{}');
+            delete drafts[key];
+            localStorage.setItem('sfg_all_drafts', JSON.stringify(drafts));
+            updateDraftDropdown();
+            showCustomAlert("Deleted successfully!", "Success");
+        });
+    }
+
+    function collectCurrentFormData() {
+        const items=[];
+        document.querySelectorAll('.item-entry').forEach(entry=>items.push({desc:entry.querySelector('.i-desc')?.value||'',delDate:entry.querySelector('.i-del-date')?.value||'',doNo:entry.querySelector('.i-dono')?.value||'',size:entry.querySelector('.i-size')?.value||'',l:entry.querySelector('.i-left')?.checked||false,r:entry.querySelector('.i-right')?.checked||false,qty:entry.querySelector('.i-qty')?.value||'',price:entry.querySelector('.i-price')?.value||''}));
+        const fields={};
+        document.querySelectorAll('input, textarea, select').forEach(el=>{if(!el.id||el.closest('#settings-modal')) return; fields[el.id]=(el.type==='checkbox'||el.type==='radio')?{type:el.type,checked:el.checked}:{type:el.type,value:el.value};});
+        const rdNo=getVal('in-rdno').trim(), qNo=getVal('in-qno').trim(), subject=getVal('in-subject').trim();
+        const stampEl=document.getElementById('out-stamp');
+        const stampSrc=(stampEl && stampEl.src && stampEl.src.startsWith('data:')) ? stampEl.src : '';
+        return {version:2,stampSrc,label:`${subject.substring(0,40)||'No Subject'} - ${getVal('in-date').trim()||'No Date'}`,docType:currentDocType,date:getVal('in-date').trim(),cdate:getVal('in-cdate').trim(),address:getVal('in-address').trim(),custAddr:getVal('in-cust-addr').trim(),rdno:rdNo,qno:qNo,pono:getVal('in-pono').trim(),subject,tax:getVal('in-tax'),items,fields,savedAt:new Date().toISOString()};
+    }
+    async function saveDraftAutoSilent(force=false, cloud=false) {
+        const data=collectCurrentFormData();
+        const hasData=!!(data.rdno||data.subject||data.address||data.pono.replace(/\./g,'').trim()||data.items.some(i=>Object.values(i).some(v=>v!==''&&v!==false)));
+        if(!force&&!hasData) return false;
+        let drafts={}; try{drafts=JSON.parse(localStorage.getItem('sfg_all_drafts')||'{}');}catch(e){drafts={};}
+        const unifiedKey = getDocumentKey(data);
+        if (unifiedKey) currentDraftKey = unifiedKey;
+        if(!currentDraftKey) currentDraftKey='draft_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+        drafts[currentDraftKey]=data;
+        localStorage.setItem('sfg_all_drafts',JSON.stringify(drafts));
+        localStorage.setItem('sfg_current_draft_key',currentDraftKey);
+        updateDraftDropdown(); saveAllFormState();
+        if (cloud) await saveToCloud({action:'save', key:currentDraftKey, data:data});
+        return true;
+    }
+
+    async function saveDraftAuto() { await saveDraftAutoSilent(false, false); }
+    async function saveDraft() { const ok=await saveDraftAutoSilent(true, true); if(ok) showCustomAlert("Saved successfully!", "Success"); }
+    async function saveCurrentDocument() { const ok=await saveDraftAutoSilent(true, true); showCustomAlert(ok ? "Saved to Google Sheet and locally!" : "Nothing to save.", ok ? "Success" : "Notice"); }
+
+    function loadSelectedDraft() {        
+        const select = document.getElementById('draft-select');
+        if (!select.value) return;
+        openDraftFromDashboard(select.value);
+    }
+
+    async function exportDraftsFile() {        
+        let drafts = localStorage.getItem('sfg_all_drafts') || '{}';
+        let blob = new Blob([drafts], { type: 'application/json' });
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        const now=new Date(); const stamp=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}-${String(now.getMinutes()).padStart(2,'0')}`; a.download=`SFG_Backup_${stamp}.json`;
+        a.click();
+        const cloudOK = await saveBackupToCloud(drafts);
+        showCustomAlert(cloudOK ? 'Backup saved locally and to Google Sheet.' : 'Backup saved locally. Google Sheet save failed.', cloudOK ? 'Success' : 'Notice');
+    }
+
+    function importDraftsFile(event) {        
+        let file = event.target.files[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let merged = Object.assign({}, JSON.parse(localStorage.getItem('sfg_all_drafts') || '{}'), JSON.parse(e.target.result));
+            localStorage.setItem('sfg_all_drafts', JSON.stringify(merged));
+            updateDraftDropdown();
+            showCustomAlert("Imported successfully!", "Success");
+        };
+        reader.readAsText(file);
+    }
+
+    async function saveQuotationToCloud() {
+        const data = collectCurrentFormData();
+        const ok = await saveToCloud({action:'save', key:getDocumentKey(data)||currentDraftKey, data:data});
+        showCustomAlert(ok ? 'Saved to Google Sheet successfully!' : 'Saved locally. Google Sheet save failed.', ok ? 'Success' : 'Notice');
+        return ok;
+    }
+
+
+    function clearPRPlaceholder(el) {
+        if (el && el.value === '.............................') el.value = '';
+    }
+
+    function getDocumentKey(data) {
+        const rd = String(data.rdno || '').trim();
+        const no = String(data.qno || '').trim();
+        return rd && no ? `RD_${rd}_NO_${no}` : null;
+    }
+
+    async function saveToCloud(payload) {
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: {'Content-Type': 'text/plain;charset=utf-8'},
+                body: JSON.stringify(payload)
+            });
+            return response.ok;
+        } catch (e) {
+            console.warn('Cloud save failed:', e);
+            return false;
+        }
+    }
+
+    async function saveBackupToCloud(backupText) {
+        return saveToCloud({action:'backup', fileName:'SFG_Backup.json', data:backupText, savedAt:new Date().toISOString()});
+    }
+
+    async function loadDocumentsFromGoogleSheet() {
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=list', {method:'GET', cache:'no-store'});
+            if (!response.ok) return [];
+            const raw = await response.json();
+            const list = Array.isArray(raw) ? raw : (raw.drafts || raw.data || raw.records || raw.items || []);
+            const remote = {};
+            list.forEach((item, i) => {
+                const d = item.data && typeof item.data === 'object' ? item.data : item;
+                const key = item.key || getDocumentKey(d) || ('remote_' + i);
+                if (d && (d.rdno || d.qno)) remote[key] = d;
+            });
+            if (Object.keys(remote).length) {
+                let local = {};
+                try { local = JSON.parse(localStorage.getItem('sfg_all_drafts') || '{}'); } catch(e) {}
+                Object.assign(local, remote);
+                localStorage.setItem('sfg_all_drafts', JSON.stringify(local));
+                updateDraftDropdown();
+            }
+            return Object.values(remote);
+        } catch(e) { console.warn('Google Sheet read failed:', e); return []; }
+    }
+
+    async function getNextQuotationNumberFromGoogleSheet() {
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=nextNumber', {method:'GET', cache:'no-store'});
+            if (!response.ok) return null;
+            const raw = await response.json();
+            const value = raw.nextNumber ?? raw.number ?? raw.next ?? raw.quotationNumber;
+            return value != null && String(value).trim() ? String(value).trim() : null;
+        } catch(e) { return null; }
+    }
+
+    function openDocumentsPage() {
+        window.open('documents.html', '_blank');
+    }
+
+    // --- Settings Management ---
+    const SETTINGS_KEY = 'sfg_quotation_settings';
+    const DEFAULT_TERMS = [
+        'Above information is an estimate of goods / services',
+        'At the Request of Mr. {request_name}',
+        'Pricing Including of all material charges.',
+        'An advance payment of {advance}% has been received for this order.'
+    ];
+    const DEFAULT_NOTES = [
+        'Above information is an estimate of goods / services',
+        'At the Request of Mr. {request_name}',
+        'Pricing Including of all material charges.',
+        'An advance payment of {advance}% has been received for this order.'
+    ];
+
+    function getSettings() {
+        let saved = {};
+        try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch(e) { saved = {}; }
+        const customers = Array.isArray(saved.customers) && saved.customers.length ? saved.customers : Array.from(document.querySelectorAll('#customer-list option')).map(o => o.value);
+        const addresses = Array.isArray(saved.addresses) && saved.addresses.length ? saved.addresses : Array.from(document.querySelectorAll('#address-list option')).map(o => o.value);
+        return {
+            quotationNumber: saved.quotationNumber || localStorage.getItem('sfg_last_document_number') || localStorage.getItem('sfg_last_quotation_number') || '1000',
+            doNumber: saved.doNumber || localStorage.getItem('sfg_last_do_number') || '300',
+            customers,
+            addresses,
+            terms: Array.isArray(saved.terms) && saved.terms.length ? saved.terms : DEFAULT_TERMS.slice(),
+            notes: Array.isArray(saved.notes) && saved.notes.length ? saved.notes : DEFAULT_NOTES.slice()
+        };
+    }
+
+    function makeSettingsRow(value, removeFn, placeholder) {
+        const row = document.createElement('div');
+        row.className = 'settings-list-row';
+        const input = document.createElement('input');
+        input.type = 'text'; input.value = value || ''; input.placeholder = placeholder || '';
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'settings-small-btn settings-remove'; btn.textContent = 'Delete';
+        btn.onclick = () => { row.remove(); };
+        row.appendChild(input); row.appendChild(btn);
+        return row;
+    }
+
+    function renderSettingsLists() {
+        const st = getSettings();
+        const customerBox = document.getElementById('settings-customer-list');
+        const addressBox = document.getElementById('settings-address-list');
+        const termsBox = document.getElementById('settings-terms-list');
+        const notesBox = document.getElementById('settings-notes-list');
+        customerBox.innerHTML = ''; addressBox.innerHTML = ''; termsBox.innerHTML = ''; notesBox.innerHTML = '';
+        st.customers.forEach(v => customerBox.appendChild(makeSettingsRow(v, null, 'Customer name')));
+        st.addresses.forEach(v => addressBox.appendChild(makeSettingsRow(v, null, 'Customer address')));
+        (Array.isArray(st.terms) ? st.terms : []).slice(4).forEach(v => termsBox.appendChild(makeSettingsRow(v, null, 'New Term')));
+        (Array.isArray(st.notes) ? st.notes : []).slice(4).forEach(v => notesBox.appendChild(makeSettingsRow(v, null, 'New Notice / Note')));
+        document.getElementById('settings-q-no').value = st.quotationNumber;
+        document.getElementById('settings-do-no').value = st.doNumber;
+    }
+
+    function openSettingsModal() {
+        renderSettingsLists();
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+
+    function closeSettingsModal() { document.getElementById('settings-modal').style.display = 'none'; }
+
+    function addSettingsCustomer() {
+        document.getElementById('settings-customer-list').appendChild(makeSettingsRow('', null, 'Customer name'));
+    }
+    function addSettingsAddress() {
+        document.getElementById('settings-address-list').appendChild(makeSettingsRow('', null, 'Customer address'));
+    }
+    function addSettingsTerm() {
+        document.getElementById('settings-terms-list').appendChild(makeSettingsRow('', null, 'Term'));
+    }
+    function addSettingsNote() {
+        document.getElementById('settings-notes-list').appendChild(makeSettingsRow('', null, 'Notice / Note'));
+    }
+
+    function collectSettingsRows(id) {
+        return Array.from(document.querySelectorAll('#' + id + ' input')).map(i => i.value.trim()).filter(Boolean);
+    }
+
+    function rebuildDatalist(id, values) {
+        const list = document.getElementById(id);
+        if (!list) return;
+        list.innerHTML = '';
+        values.forEach(v => {
+            const option = document.createElement('option');
+            option.value = v;
+            list.appendChild(option);
+        });
+    }
+
+    function saveSettings() {
+        const qEl = document.getElementById('settings-q-no');
+        const doEl = document.getElementById('settings-do-no');
+        const qStart = parseInt(qEl ? qEl.value : '', 10);
+        const doStart = parseInt(doEl ? doEl.value : '', 10);
+        const st = {
+            quotationNumber: String(Number.isFinite(qStart) ? qStart : 1000),
+            doNumber: String(Number.isFinite(doStart) ? doStart : 300),
+            customers: collectSettingsRows('settings-customer-list'),
+            addresses: collectSettingsRows('settings-address-list'),
+            terms: DEFAULT_TERMS.concat(collectSettingsRows('settings-terms-list')),
+            notes: DEFAULT_NOTES.concat(collectSettingsRows('settings-notes-list'))
+        };
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(st));
+        rebuildDatalist('customer-list', st.customers);
+        rebuildDatalist('address-list', st.addresses);
+        localStorage.setItem('sfg_last_document_number', String(Math.max(0, parseInt(st.quotationNumber,10)-1)));
+        localStorage.setItem('sfg_last_quotation_number', String(Math.max(0, parseInt(st.quotationNumber,10)-1)));
+        localStorage.setItem('sfg_last_invoice_number', String(Math.max(0, parseInt(st.quotationNumber,10)-1)));
+        localStorage.setItem('sfg_last_do_number', String(Math.max(0, parseInt(st.doNumber,10)-1)));
+        const qInput = document.getElementById('in-qno');
+        if (qInput) qInput.value = String(st.quotationNumber);
+        const outQ = document.getElementById('out-qno');
+        const badge = document.getElementById('out-logo-badge');
+        if (outQ) outQ.innerText = String(st.quotationNumber);
+        if (badge) badge.innerText = String(st.quotationNumber);
+        sync();
+        applyCustomTermsAndNotes();
+        sync();
+        closeSettingsModal();
+        showCustomAlert('Settings saved successfully!', 'Success');
+    }
+
+    function applyCustomTermsAndNotes(preserve=true) {
+        const st=getSettings(), qBox=document.getElementById('custom-quotation-terms'), iBox=document.getElementById('custom-invoice-notes');
+        if(!qBox||!iBox) return;
+        const oldQ={},oldI={}; qBox.querySelectorAll('input').forEach(x=>oldQ[x.dataset.index]=x.checked); iBox.querySelectorAll('input').forEach(x=>oldI[x.dataset.index]=x.checked);
+        qBox.innerHTML=''; iBox.innerHTML='';
+        (st.terms||[]).slice(4).forEach((text,idx)=>{const row=document.createElement('div'),cb=document.createElement('input'); cb.type='checkbox';cb.id='custom-term-'+idx;cb.dataset.index=idx;cb.dataset.text=text;cb.checked=preserve&&oldQ[idx]!==undefined?oldQ[idx]:true;cb.onchange=()=>{sync();checkAutoSave();saveAllFormState();};const label=document.createElement('label');label.htmlFor=cb.id;label.textContent=' '+text;label.style.fontWeight='bold';row.append(cb,label);qBox.appendChild(row);});
+        (st.notes||[]).slice(4).forEach((text,idx)=>{const row=document.createElement('div'),cb=document.createElement('input'); cb.type='checkbox';cb.id='custom-note-'+idx;cb.dataset.index=idx;cb.dataset.text=text;cb.checked=preserve&&oldI[idx]!==undefined?oldI[idx]:true;cb.onchange=()=>{sync();checkAutoSave();saveAllFormState();};const label=document.createElement('label');label.htmlFor=cb.id;label.textContent=' '+text;label.style.fontWeight='bold';row.append(cb,label);iBox.appendChild(row);});
+    }
+    function buildBarcodeText(totalAmountNum) {
+        const subject=getVal('in-subject').trim().substring(0,20), date=getVal('in-date').trim(), rd=getVal('in-rdno').trim(), no=getVal('in-qno').trim(), price=Number(totalAmountNum||0).toFixed(2);
+        return `Date: ${date}\nSubject: ${subject}\nRD No: ${rd}\n${currentDocType==='INVOICE'?'Invoice No':'Quotation No'}: ${no}\nPrice: LKR ${price}`;
+    }
+    async function newDocument() {
+        const hasData=!!(currentDraftKey||getVal('in-rdno').trim()||getVal('in-subject').trim()||getVal('in-address').trim()||document.querySelectorAll('.item-entry').length>0);
+        if(hasData && confirm('Current document has data. Save it before opening a new document?\n\nOK = Save & New\nCancel = Open New without saving')) await saveDraftAutoSilent(true, true);
+        currentDraftKey=null; localStorage.removeItem('sfg_current_draft_key'); isLoadingDraft=true;
+        document.querySelectorAll('input,textarea').forEach(el=>{if(el.type==='checkbox'||el.type==='radio')el.checked=el.defaultChecked;else if(el.type==='date' && el.id!=='in-date') el.value=''; else if(el.type!=='date') el.value='';});
+        document.getElementById('in-tax').value='0'; document.getElementById('inv-advance-amount').value='0';
+        const newQNo = (await getNextQuotationNumberFromGoogleSheet()) || getNextQuotationNumber();
+        const qNoInput = document.getElementById('in-qno'); if(qNoInput) qNoInput.value = newQNo;
+        const prInput = document.getElementById('in-pono'); if(prInput) prInput.value = '.............................';
+        const newStamp=document.getElementById('out-stamp'); if(newStamp){newStamp.src='';newStamp.style.display='none';}
+        document.getElementById('items-list').innerHTML=''; addItem(); setDocType('QUOTATION'); setTodaysDate(); isLoadingDraft=false; applyCustomTermsAndNotes(false); sync(); saveAllFormState();
+        showNewNumberModal(newQNo);
+    }
+
+    function showNewNumberModal(number) {
+        let modal=document.getElementById('new-number-modal');
+        if(!modal){
+            modal=document.createElement('div'); modal.id='new-number-modal';
+            modal.innerHTML=`<div class="new-number-box"><div class="new-number-title">NEW QUOTATION / INVOICE</div><div class="new-number-label">New Number</div><input id="new-number-input" type="text"><div class="new-number-actions"><button type="button" id="new-number-use">Use Number</button></div></div>`;
+            document.body.appendChild(modal);
+            document.getElementById('new-number-use').onclick=()=>{
+                const val=document.getElementById('new-number-input').value.trim(); if(!val)return;
+                document.getElementById('in-qno').value=val;
+                const n=parseInt(val,10); if(Number.isFinite(n)) localStorage.setItem(QUOTATION_NUMBER_KEY,String(n+1));
+                modal.style.display='none'; sync(); saveAllFormState();
+            };
+        }
+        document.getElementById('new-number-input').value=number;
+        modal.style.display='flex';
+        setTimeout(()=>{const el=document.getElementById('new-number-input');el.focus();el.select();},50);
+    }
+
+
+
+    /* ===== REFRESH DATA PERSISTENCE / QUOTATION NUMBER SEQUENCE ===== */
+    const FORM_STATE_KEY = 'sfg_current_form_state_v1';
+    const QUOTATION_NUMBER_KEY = 'sfg_next_quotation_number_v1';
+
+    function saveAllFormState() {
+        try {
+            const state = { fields: {}, items: [], docType: (typeof currentDocType !== 'undefined' ? currentDocType : '') };
+            document.querySelectorAll('input, textarea, select').forEach(el => {
+                if (!el.id) return;
+                state.fields[el.id] = (el.type === 'checkbox' || el.type === 'radio')
+                    ? {type: el.type, checked: el.checked}
+                    : {type: el.type, value: el.value};
+            });
+            document.querySelectorAll('.item-entry').forEach(entry => {
+                state.items.push({
+                    desc: entry.querySelector('.i-desc')?.value || '',
+                    delDate: entry.querySelector('.i-del-date')?.value || '',
+                    doNo: entry.querySelector('.i-dono')?.value || '',
+                    size: entry.querySelector('.i-size')?.value || '',
+                    l: entry.querySelector('.i-left')?.checked || false,
+                    r: entry.querySelector('.i-right')?.checked || false,
+                    qty: entry.querySelector('.i-qty')?.value || '',
+                    price: entry.querySelector('.i-price')?.value || ''
+                });
+            });
+            localStorage.setItem(FORM_STATE_KEY, JSON.stringify(state));
+        } catch(e) { console.warn(e); }
+    }
+
+    function restoreAllFormState() {
+        try {
+            const state = JSON.parse(localStorage.getItem(FORM_STATE_KEY) || 'null');
+            if (!state) return false;
+            Object.entries(state.fields || {}).forEach(([id, data]) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (data.type === 'checkbox' || data.type === 'radio') el.checked = !!data.checked;
+                else el.value = data.value ?? '';
+            });
+            if (state.docType && typeof setDocType === 'function') setDocType(state.docType);
+            const list = document.getElementById('items-list');
+            if (list && Array.isArray(state.items)) {
+                list.innerHTML = '';
+                if (state.items.length) state.items.forEach(item => addItem(item));
+                else addItem();
+            }
+            if (typeof sync === 'function') sync();
+            return true;
+        } catch(e) { console.warn(e); return false; }
+    }
+
+    function getQuotationSequence() {
+        const n = parseInt(localStorage.getItem(QUOTATION_NUMBER_KEY) || '', 10);
+        if (Number.isFinite(n) && n > 0) return n;
+        const q = document.getElementById('in-qno');
+        const existing = parseInt((q?.value || '').replace(/\D/g, ''), 10);
+        return Number.isFinite(existing) && existing > 0 ? existing : 1;
+    }
+
+    function startNewQuotation() {
+        const n = getQuotationSequence();
+        const q = document.getElementById('in-qno');
+        if (q) q.value = String(n);
+        localStorage.setItem(QUOTATION_NUMBER_KEY, String(n + 1));
+        saveAllFormState();
+        if (typeof sync === 'function') sync();
+    }
+
+    document.addEventListener('input', saveAllFormState, true);
+    document.addEventListener('change', saveAllFormState, true);
+
+    window.onload = function() {        
+        setTodaysDate();
+        updateDraftDropdown();
+        const initialSettings = getSettings();
+        rebuildDatalist('customer-list', initialSettings.customers);
+        rebuildDatalist('address-list', initialSettings.addresses);
+        applyCustomTermsAndNotes(false);
+        const savedKey=localStorage.getItem('sfg_current_draft_key');
+        if(savedKey && JSON.parse(localStorage.getItem('sfg_all_drafts')||'{}')[savedKey]) openDraftFromDashboard(savedKey);
+        else if(!restoreAllFormState()) { const prInput=document.getElementById('in-pono'); if(prInput && !prInput.value) prInput.value='.............................'; const qInput=document.getElementById('in-qno'); if(qInput && !qInput.value) qInput.value=getNextQuotationNumber(); sync(); }
+    };
+
+    async function initializeSheetView() {
+        const params=new URLSearchParams(location.search); const key=params.get('key');
+        if(params.get('view')!=='sheet') return false;
+        document.body.classList.add('sheet-view');
+        await loadDocumentsFromGoogleSheet();
+        let drafts={}; try{drafts=JSON.parse(localStorage.getItem('sfg_all_drafts')||'{}')}catch(e){}
+        if(key && drafts[key]) { currentDraftKey=key; localStorage.setItem('sfg_current_draft_key',key); isLoadingDraft=true; openDraftFromDashboard(key); isLoadingDraft=false; }
+        else if(key){ const d=Object.values(drafts).find(x=>getDocumentKey(x)===key); if(d){ const k=getDocumentKey(d); localStorage.setItem('sfg_current_draft_key',k); openDraftFromDashboard(k); } }
+        document.title=(drafts[key]?.subject || 'Quotation / Invoice Sheet');
+        return true;
+    }
+    window.addEventListener('DOMContentLoaded',()=>{
+        initializeSheetView().then(isSheet=>{
+            if(isSheet){
+                document.addEventListener('contextmenu',e=>e.preventDefault());
+                document.addEventListener('selectstart',e=>e.preventDefault());
+                document.addEventListener('dragstart',e=>e.preventDefault());
+                document.addEventListener('copy',e=>e.preventDefault());
+            }
+        });
+    });
+</script>
+</body>
+</html>
