@@ -3,7 +3,10 @@
 
 
 
-<!DOCTYPE html><html lang="si"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>SFG Quotation - Shehani Fiberglass Works</title>    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>    <script src="image/html2pdf.bundle.min.js"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>    <style>
+<!DOCTYPE html><html lang="si"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>SFG Quotation - Shehani Fiberglass Works</title>
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="image/android-chrome-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="image/android-chrome-192x192.png">    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>    <script src="image/html2pdf.bundle.min.js"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>    <style>
         :root {
             --dark-blue: #004085;
             --light-gray: #e9ecef;
@@ -216,6 +219,63 @@
             font-weight: 700; 
         }
 
+
+        /* --- Mobile / Tablet Responsive UI --- */
+        .sheet-only-actions{display:none;}
+        @media (max-width: 900px){
+            body{margin:0;padding:8px;display:block;overflow-x:hidden;}
+            .main-wrapper{width:100%;max-width:100%;display:flex;flex-direction:column;gap:12px;}
+            .form-container{width:100%;box-sizing:border-box;}
+            .preview-container{width:210mm;max-width:100%;height:auto;min-height:297mm;margin:0 auto;transform-origin:top center;}
+            .preview-content{padding:5mm 8mm 0 8mm;}
+            .footer-signs{padding:0 8mm 8mm 8mm;}
+            .row{flex-wrap:wrap;gap:6px;}
+            .row label{width:110px;}
+            .row input,.row select{min-width:0;}
+            .upload-controls{flex-wrap:wrap;}
+            .upload-controls input{max-width:100%;}
+            .draft-manager-box > div{flex-wrap:wrap;}
+            .bottom-btns{gap:8px;}
+            .bottom-btns button{flex:1 1 130px;justify-content:center;}
+            #dashboard-modal>div{width:min(96vw,700px)!important;max-height:90vh!important;padding:12px!important;}
+            #dashboard-search{min-width:0;}
+            .dashboard-sort-wrap{display:flex;flex-wrap:wrap;gap:6px;width:100%;}
+        }
+        @media (max-width: 600px){
+            body{font-size:14px;}
+            .header-bar{font-size:16px;padding:10px;}
+            .doc-type-toggle{gap:6px;padding:6px;}
+            .doc-type-btn{padding:9px 6px;font-size:12px;}
+            .form-content{padding:10px;}
+            .row{display:grid;grid-template-columns:1fr;gap:4px;margin-bottom:10px;align-items:stretch;}
+            .row label{width:auto;font-size:12px;}
+            .row input,.row select{width:100%;box-sizing:border-box;padding:8px;}
+            .items-pricing-box{padding:7px;}
+            .item-entry{padding:8px 0;}
+            .terms-box div{align-items:flex-start;line-height:1.35;}
+            .upload-controls{display:grid;grid-template-columns:1fr;gap:7px;}
+            .upload-controls input{width:100%;font-size:12px!important;}
+            .btn-img-del{padding:7px 10px;font-size:11px;}
+            .bottom-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+            .bottom-btns button{width:100%;padding:10px 8px;}
+            .preview-container{width:100%;min-height:0;overflow:visible;}
+            .preview-content{padding:4mm 5mm 0 5mm;}
+            .info-grid{font-size:11px;gap:8px;}
+            .subject-bar{font-size:15px;padding:7px 8px;margin:10px 0;}
+            #quote-table{font-size:10px;}
+            #quote-table th{font-size:10px;padding:6px 4px;}
+            #out-table-body td{padding:7px 4px;line-height:1.25;}
+            .total-banner{font-size:12px;padding:8px;}
+            .total-row{font-size:11px;}
+            .footer-terms-wrap{font-size:9px;}
+            .sign-block{font-size:9px;}
+            .sign-img{width:85px;}
+            .stamp-wrap{width:3cm;height:3cm;}
+            .sheet-only-actions{position:fixed;top:8px;left:8px;right:8px;z-index:45000;display:flex;justify-content:center;gap:8px;}
+            .sheet-only-actions button{border:0;border-radius:22px;padding:9px 16px;font-weight:800;box-shadow:0 3px 12px rgba(0,0,0,.22);cursor:pointer;}
+            .sheet-save-btn{background:#198754;color:#fff;}
+        }
+
         @media print {            
             @page { size: A4 portrait; margin: 0; }
             .no-print { display: none !important; }
@@ -318,131 +378,8 @@
         .new-number-title{font-size:20px;font-weight:800;color:#004085;letter-spacing:.5px}.new-number-label{margin:18px 0 7px;color:#666;font-weight:700}
         #new-number-input{width:100%;box-sizing:border-box;text-align:center;font-size:42px;font-weight:900;color:#004085;padding:12px;border:2px solid #004085;border-radius:12px;outline:none}
         .new-number-actions{margin-top:18px}.new-number-actions button{background:linear-gradient(#1c69b5,#004085);color:#fff;border:0;border-radius:25px;padding:11px 30px;font-size:15px;font-weight:800;cursor:pointer}
-        body.sheet-view{background:#eee!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;padding:20px!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}.sheet-view .main-wrapper{display:block!important;width:auto!important}.sheet-view .form-container,.sheet-view .dashboard-modal,.sheet-view #dashboard-modal,.sheet-view #custom-warning-modal,.sheet-view #custom-alert-modal,.sheet-view #do-modal,.sheet-view .no-print{display:none!important}.sheet-view .preview-container{display:flex!important;margin:0 auto!important;box-shadow:0 8px 30px rgba(0,0,0,.18)}
-
-        /* =========================================================
-           INVOICE-ONLY VISUAL REDESIGN
-           Presentation changes only. Existing data, calculations,
-           fields, document logic and print dimensions remain intact.
-           ========================================================= */
-        body.invoice-design .preview-container {
-            border: 1px solid #d7dee8;
-            border-top: 0;
-            box-shadow: 0 8px 28px rgba(0, 64, 133, 0.10);
-            position: relative;
-        }
-        body.invoice-design .preview-header {
-            border-top: 9px solid #004085;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-            padding-bottom: 5px;
-            border-bottom: 1px solid #dce5ef;
-        }
-        body.invoice-design .logo-section {
-            margin-top: 7px;
-            padding: 2px 0 4px;
-        }
-        body.invoice-design .logo-img {
-            filter: none;
-        }
-        body.invoice-design .logo-top-badge {
-            color: #e7edf5;
-            font-size: 28px;
-        }
-        body.invoice-design .preview-content {
-            padding-top: 7mm;
-        }
-        body.invoice-design .info-grid {
-            background: #f8fafc;
-            border: 1px solid #dbe3ec;
-            border-radius: 8px;
-            padding: 10px 12px;
-            margin-top: 1px;
-            box-sizing: border-box;
-        }
-        body.invoice-design .customer-info-block {
-            margin-top: 0;
-        }
-        body.invoice-design #out-address {
-            line-height: 1.45;
-        }
-        body.invoice-design .subject-bar {
-            background: #004085 !important;
-            color: #ffffff !important;
-            border-left: 0;
-            border-radius: 6px;
-            padding: 8px 12px;
-            margin: 13px 0 10px;
-            min-height: 19px;
-            font-size: 18px;
-            letter-spacing: .2px;
-            box-shadow: 0 3px 8px rgba(0,64,133,.12);
-        }
-        body.invoice-design #quote-table {
-            margin-top: 10px;
-            font-size: 14px;
-            border: 1px solid #d7dee8;
-            border-radius: 7px;
-            overflow: hidden;
-        }
-        body.invoice-design #quote-table th {
-            background: #123f6d !important;
-            padding: 9px 8px;
-            font-size: 13px;
-            border-right: 1px solid rgba(255,255,255,.16);
-        }
-        body.invoice-design #out-table-body td {
-            padding: 8px 8px;
-            border-bottom: 1px solid #e2e7ed;
-            line-height: 1.4;
-        }
-        body.invoice-design #out-table-body tr:last-child td {
-            border-bottom: 0;
-        }
-        body.invoice-design .summary-container {
-            margin-top: 9px;
-            padding-top: 5px;
-            border-top: 1px solid #dbe3ec;
-        }
-        body.invoice-design .total-row {
-            padding: 4px 0;
-            font-size: 14px;
-        }
-        body.invoice-design .total-banner {
-            background: linear-gradient(90deg, #004085, #0a5c9f) !important;
-            border-radius: 6px;
-            padding: 10px 12px;
-            margin-top: 6px;
-            font-size: 16px;
-            box-shadow: 0 4px 10px rgba(0,64,133,.12);
-        }
-        body.invoice-design .footer-terms-wrap {
-            margin-top: 12px;
-            padding-top: 8px;
-            border-top: 1px solid #e1e6ec;
-            font-size: 11.5px;
-            color: #4b5563;
-        }
-        body.invoice-design .stamp-wrap {
-            margin-top: 8px;
-        }
-        body.invoice-design .footer-signs {
-            padding-bottom: 9mm;
-        }
-        body.invoice-design #qrcode-wrap {
-            border: 1px solid #e0e6ed;
-            border-radius: 5px;
-            padding: 3px;
-            box-sizing: border-box;
-            background: #fff;
-        }
-        @media print {
-            body.invoice-design .preview-container {
-                box-shadow: none;
-                border: none;
-            }
-        }
-
-    </style></head><body>
+        body.sheet-view{background:#eee!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;padding:70px 20px 20px!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}.sheet-view .main-wrapper{display:block!important;width:auto!important}.sheet-view .form-container,.sheet-view .dashboard-modal,.sheet-view #dashboard-modal,.sheet-view #custom-warning-modal,.sheet-view #do-modal,.sheet-view .no-print{display:none!important}.sheet-view #custom-alert-modal{display:none;}.sheet-view .preview-container{display:flex!important;margin:0 auto!important;box-shadow:0 8px 30px rgba(0,0,0,.18)}
+</style></head><body>
 <div class="main-wrapper">    <div class="form-container">        <div class="header-bar settings-header"><span>Quotation Details</span><button type="button" class="settings-btn" onclick="openSettingsModal()" title="Settings">⚙️</button></div>        <div class="doc-type-toggle">            <button class="doc-type-btn active" id="btn-doc-quotation" onclick="setDocType('QUOTATION')">QUOTATION</button>            <button class="doc-type-btn" id="btn-doc-invoice" onclick="setDocType('INVOICE')">INVOICE</button>        </div>        <div class="form-content">            <div class="row">                <label>Order Date:</label>                 <input type="date" id="in-date" value="" oninput="sync(); checkAutoSave();" onchange="sync(); checkAutoSave();">                <label style="width: auto;">Complete Date:</label>                 <input type="date" id="in-cdate" placeholder="DD/MM/YYYY" oninput="sync(); checkAutoSave();" onchange="sync(); checkAutoSave();">            </div>            <div class="row">                <label>Customer:</label>                 <input list="customer-list" id="in-address" value="" placeholder="Enter or select Customer Name" oninput="sync(); checkAutoSave();">                <datalist id="customer-list">                    <option value="ATG Ceylon (Pvt) Ltd">                    <option value="ATG Hand Care (Pvt) Ltd">                    <option value="ATG Occupational (Pvt) Ltd">                </datalist>            </div>            <div class="row">                <label>Address:</label>                 <input list="address-list" id="in-cust-addr" value="" placeholder="Enter or select Customer Address" oninput="sync(); checkAutoSave();">                <datalist id="address-list">                    <option value="Spur Road 7, Phase II, IPZ Katunayake">                    <option value="Block No. 35, WEPZ, Wathupitiwala, Sri Lanka">                    <option value="Katunayake">                    <option value="Wathupitiwala">                </datalist>            </div>            <div class="row">                <label>PR No:</label>                 <input type="text" id="in-pono" value="............................." placeholder="Enter PR No" onfocus="clearPRPlaceholder(this)" oninput="sync(); checkAutoSave();">                <label style="width: auto;">RD No:</label>                 <input type="text" id="in-rdno" placeholder="Enter RD No" oninput="sync(); checkAutoSave();">            </div>            <div class="row">                <label id="lbl-qno">Quotation No:</label>                 <input type="text" id="in-qno" value="" readonly style="background: #f0f0f0;">                <label style="width: auto; font-size: 11px;">                    <input type="checkbox" id="chk-show-qno" onchange="sync(); checkAutoSave();" checked> Show in Quote                </label>            </div>            <div class="row">                <label>Subject:</label>                 <input type="text" id="in-subject" placeholder="Enter Subject" oninput="sync();" onblur="checkAutoSave()" style="border: 1px solid #444; height: 30px;">            </div>
             <div class="items-pricing-box">                <strong style="font-size: 13px;">Items & Pricing</strong>                <div id="items-list">                    <div class="item-entry">                        <input type="text" class="i-desc" placeholder="Item Description" style="width: 95%; margin-bottom: 3px; font-size: 12px;" oninput="sync(); checkAutoSave();">                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">                            <input type="date" class="i-del-date" placeholder="Delivery Date" style="width: 48%; font-size: 11px;" value="" oninput="onDeliveryDateInput(this)" onchange="onDeliveryDateInput(this)">                            <input type="text" class="i-dono" placeholder="D.O No" style="width: 48%; font-size: 11px;" oninput="sync(); checkAutoSave(); checkAllItemDOStatus();">                        </div>                        <div style="display:flex; gap: 8px; align-items: center; font-size: 12px; flex-wrap: wrap;">                            <div>Size: <input type="text" class="i-size" style="width: 45px;" oninput="sync(); checkAutoSave();"></div>                            <div class="hand-icons">                                <span class="hand-box"><input type="checkbox" class="i-left" onchange="sync(); checkAutoSave();"> L</span>                                <span class="hand-box"><input type="checkbox" class="i-right" onchange="sync(); checkAutoSave();"> R</span>                            </div>                            <div>Qty: <input type="number" class="i-qty" style="width: 40px;" oninput="sync(); checkAutoSave();"></div>                            <div style="display:flex; align-items:center; gap:4px;">Price: <input type="number" class="i-price" style="width: 70px;" oninput="sync(); checkAutoSave();"></div>                            <button type="button" class="btn-do-generate" disabled onclick="openDeliveryOrder(this)" style="padding:2px 6px; font-size:10px; cursor:pointer; background:#6c757d; color:white; border:none; border-radius:3px;">Delivery Order</button>                        </div>                    </div>                </div>                <div class="btn-group">                    <button class="btn-add" onclick="addItem()">+ Add</button>                    <button class="btn-del" onclick="delItem()">- Remove</button>                </div>            </div>
             <div class="row" style="margin-top: 10px;">                <label>Value added Tax:</label>                 <input type="number" id="in-tax" value="0" oninput="sync(); checkAutoSave();" style="width: 80px; flex: none;">                <label style="width: auto; font-size: 11px;">                    <input type="checkbox" id="chk-show-tax" onchange="sync(); checkAutoSave();"> Show in Quote                </label>            </div>
@@ -454,6 +391,9 @@
                 </div>
             </div>
             <div class="bottom-btns">                <button class="print-btn" id="btn-print" onclick="triggerPDF()">🖨️ Print</button>                <button class="save-btn" id="save-btn" onclick="saveCurrentDocument()">💾 Save</button>                                <button type="button" class="dash-link" onclick="newDocument()">🆕 New</button>                <button type="button" class="dash-link" onclick="openDashboardModal()">📁 Dashboard</button><button type="button" class="dash-link" onclick="openDocumentsPage()">📄 Sheets</button>            </div>        </div>    </div>
+    <div class="sheet-only-actions" id="sheet-only-actions">
+        <button type="button" class="sheet-save-btn" onclick="saveSheetView()">💾 Save</button>
+    </div>
     <!-- Dashboard Modal -->    
     <div id="dashboard-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">        
         <div style="background:white; width:700px; max-height:85vh; border-radius:8px; padding:20px; display:flex; flex-direction:column; box-shadow:0 4px 10px rgba(0,0,0,0.3);">            
@@ -525,7 +465,7 @@
         <div class="preview-header">
             <div class="logo-section">
                 <div class="logo-top-badge" id="out-logo-badge">0000</div>
-                <img id="out-logo" src="image/Logo01.png" alt="SFG Logo" class="logo-img">
+                <img id="out-logo" src="image/logo01.png" alt="SFG Logo" class="logo-img">
             </div>
         </div>
                 <div class="preview-content">
@@ -732,7 +672,6 @@
 
     function setDocType(type) {        
         currentDocType = type;
-        document.body.classList.toggle('invoice-design', type === 'INVOICE');
         const btnQ = document.getElementById('btn-doc-quotation');
         const btnI = document.getElementById('btn-doc-invoice');
         const qTerms = document.getElementById('quotation-terms-box');
@@ -1058,11 +997,11 @@
         if(currentDocType === 'INVOICE') {            
             if(lblQno) lblQno.innerText = "Invoice No:";
             if(outQnoLbl) outQnoLbl.innerText = "Invoice No:";
-            if(outLogo) outLogo.src = "image/Logo02.png";
+            if(outLogo) outLogo.src = "image/logo02.png";
         } else {            
             if(lblQno) lblQno.innerText = "Quotation No:";
             if(outQnoLbl) outQnoLbl.innerText = "Quotation No:";
-            if(outLogo) outLogo.src = "image/Logo01.png";
+            if(outLogo) outLogo.src = "image/logo01.png";
         }
         
         const outDate = document.getElementById('out-date');
@@ -1323,7 +1262,9 @@
             let textColor = hasCompleteDate ? 'green' : 'red';
             let card = document.createElement('div');
             card.style = "background: #e0f2fe; border: 1px solid #ccc; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;";
-            card.innerHTML = `<div><strong style="color: ${textColor};">${numStr}. ${d.label || key}</strong><br><small>Date: ${d.date || 'N/A'} | RD No: ${d.rdno || 'N/A'} | No: ${d.qno || 'N/A'}</small></div>
+            const typeLabel = String(d.docType || 'QUOTATION').toUpperCase() === 'INVOICE' ? 'Invoice No' : 'Quotation No';
+            const displayName = `RD No: ${d.rdno || 'N/A'} | ${typeLabel}: ${d.qno || 'N/A'} | ${d.label || 'No Subject'}`;
+            card.innerHTML = `<div><strong style="color: ${textColor};">${numStr}. ${displayName}</strong><br><small>Date: ${d.date || 'N/A'} | Status: ${hasCompleteDate ? 'Complete' : 'Pending'}</small></div>
                               <div style="display: flex; gap: 5px;">
                                   <button onclick="openDraftFromDashboard('${key.replace(/'/g, "\\'")}')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">Open</button>
                                   <button onclick="deleteDraftFromDashboard('${key.replace(/'/g, "\\'")}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">Delete</button>
@@ -1351,7 +1292,7 @@
         const list=document.getElementById('items-list'); list.innerHTML='';
         if(data.items && data.items.length) data.items.forEach(item=>addItem(item)); else addItem();
         if(data.fields) Object.entries(data.fields).forEach(([id,d])=>{const el=document.getElementById(id); if(!el || el.closest('#settings-modal')) return; if(d.type==='checkbox'||d.type==='radio') el.checked=!!d.checked; else if(id!=='in-qno') el.value=d.value ?? el.value;});
-        const savedStamp=document.getElementById('out-stamp'); if(savedStamp){ if(data.stampSrc){savedStamp.src=data.stampSrc;savedStamp.style.display='block';} else {savedStamp.src='';savedStamp.style.display='none';} }
+        const savedStamp=document.getElementById('out-stamp'); if(savedStamp){ let savedStampSrc=data.stampSrc||''; if(!savedStampSrc){ try{ savedStampSrc=localStorage.getItem('sfg_stamp_'+key)||''; }catch(err){} } if(savedStampSrc){savedStamp.src=savedStampSrc;savedStamp.style.display='block';} else {savedStamp.src='';savedStamp.style.display='none';} }
         applyCustomTermsAndNotes(true);
         isLoadingDraft = false;
         sync();
@@ -1412,6 +1353,7 @@
         const unifiedKey = getDocumentKey(data);
         if (unifiedKey) currentDraftKey = unifiedKey;
         if(!currentDraftKey) currentDraftKey='draft_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+        try { const stamp = data.stampSrc || ''; if(stamp) localStorage.setItem('sfg_stamp_' + currentDraftKey, stamp); else localStorage.removeItem('sfg_stamp_' + currentDraftKey); } catch(err) {}
         drafts[currentDraftKey]=data;
         localStorage.setItem('sfg_all_drafts',JSON.stringify(drafts));
         localStorage.setItem('sfg_current_draft_key',currentDraftKey);
@@ -1781,14 +1723,29 @@
         else if(!restoreAllFormState()) { const prInput=document.getElementById('in-pono'); if(prInput && !prInput.value) prInput.value='.............................'; const qInput=document.getElementById('in-qno'); if(qInput && !qInput.value) qInput.value=getNextQuotationNumber(); sync(); }
     };
 
+    async function saveSheetView(){
+        const ok = await saveDraftAutoSilent(true, true);
+        const msg = ok ? 'Quotation / Invoice saved successfully.' : 'Nothing to save.';
+        showCustomAlert(msg, ok ? 'Saved' : 'Notice');
+    }
+
+    function showSheetAccessDenied(){
+        document.body.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f4f4;font-family:Segoe UI,Tahoma,sans-serif;padding:20px;box-sizing:border-box;"><div style="max-width:520px;background:#fff;border-top:7px solid #dc3545;border-radius:14px;padding:35px;text-align:center;box-shadow:0 12px 35px rgba(0,0,0,.18)"><div style="font-size:54px">⛔</div><h1 style="color:#dc3545;margin:10px 0">Access Denied</h1><p style="color:#555;line-height:1.6">This quotation / invoice sheet can only be opened from the Quotation &amp; Invoice Sheets list.</p></div></div>`;
+        document.title='Access Denied';
+    }
+
     async function initializeSheetView() {
         const params=new URLSearchParams(location.search); const key=params.get('key');
         if(params.get('view')!=='sheet') return false;
         document.body.classList.add('sheet-view');
+        history.replaceState({sheet:true,key:key||''},'',location.href);
+        window.onpopstate=()=>{ history.pushState({sheet:true,key:key||''},'',location.href); showSheetAccessDenied(); };
+        window.onbeforeunload=()=>{ return undefined; };
         await loadDocumentsFromGoogleSheet();
         let drafts={}; try{drafts=JSON.parse(localStorage.getItem('sfg_all_drafts')||'{}')}catch(e){}
         if(key && drafts[key]) { currentDraftKey=key; localStorage.setItem('sfg_current_draft_key',key); isLoadingDraft=true; openDraftFromDashboard(key); isLoadingDraft=false; }
-        else if(key){ const d=Object.values(drafts).find(x=>getDocumentKey(x)===key); if(d){ const k=getDocumentKey(d); localStorage.setItem('sfg_current_draft_key',k); openDraftFromDashboard(k); } }
+        else if(key){ const d=Object.values(drafts).find(x=>getDocumentKey(x)===key); if(d){ const k=getDocumentKey(d); localStorage.setItem('sfg_current_draft_key',k); openDraftFromDashboard(k); } else { showSheetAccessDenied(); return true; } }
+        else { showSheetAccessDenied(); return true; }
         document.title=(drafts[key]?.subject || 'Quotation / Invoice Sheet');
         return true;
     }
