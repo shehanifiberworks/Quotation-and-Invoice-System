@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SFG - Quotation & Invoice Sheets</title>
+<link rel="icon" href="image/favicon.ico" type="image/x-icon">
+<link rel="icon" href="image/android-chrome-192x192.png" type="image/png">
+<link rel="apple-touch-icon" href="image/android-chrome-192x192.png">
+<style>
+:root{--blue:#004085;--light:#f4f8fc;--border:#d9e1e8}
+*{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f4f4f4;margin:0;padding:24px;color:#222}.wrap{max-width:1200px;margin:auto;background:#fff;border:1px solid #ccc;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:20px}.head{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:15px}.head h2{margin:0;color:var(--blue)}.btn{background:var(--blue);color:#fff;border:0;border-radius:20px;padding:8px 16px;font-weight:bold;cursor:pointer}.tools{display:flex;gap:10px;margin-bottom:12px}.tools input{flex:1;min-width:0;padding:9px;border:1px solid #aaa;border-radius:5px}.tabs{display:flex;gap:8px;margin-bottom:12px;border-bottom:1px solid #ddd}.tab{border:1px solid #c8d2dc;background:#fff;color:var(--blue);padding:9px 20px;border-radius:8px 8px 0 0;font-weight:800;cursor:pointer}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:6px}table{width:100%;border-collapse:collapse;min-width:850px}th{background:var(--blue);color:#fff;padding:0;text-align:left;white-space:nowrap}th button{display:block;width:100%;padding:10px;border:0;background:transparent;color:inherit;text-align:left;font:inherit;font-weight:800;cursor:pointer}th button:hover{background:rgba(255,255,255,.1)}th .sort-mark{font-size:10px;margin-left:5px}td{padding:9px;border-bottom:1px solid #ddd}.file-row{cursor:pointer}.file-row:hover{background:#f5f9fd}.status-pending{color:#dc3545;font-weight:bold}.status-complete{color:#198754;font-weight:bold}.amount{font-weight:bold;text-align:right;white-space:nowrap}.empty{text-align:center;padding:30px;color:#777}.type-badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:800}.type-quotation{background:#e0f2fe;color:#004085}.type-invoice{background:#fee2e2;color:#9b1c1c}.mobile-actions{display:none}
+@media(max-width:700px){body{padding:8px}.wrap{padding:10px}.head{align-items:flex-start;flex-direction:column}.head h2{font-size:19px}.tools{flex-direction:column}.tools .btn{width:100%}.tabs{gap:5px}.tab{flex:1;padding:9px 7px;font-size:12px}.table-wrap{border:0;overflow:visible}table{min-width:0}thead{display:none}tbody,tr,td{display:block;width:100%}tr{background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;padding:5px;box-shadow:0 2px 7px rgba(0,0,0,.06)}td{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:7px 6px;border-bottom:1px solid #eee;text-align:right}td:last-child{border-bottom:0}td::before{content:attr(data-label);font-weight:800;color:#555;text-align:left}.amount{text-align:right}.mobile-actions{display:flex;justify-content:center;margin-top:10px}.mobile-actions .btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="head"><h2>Quotation & Invoice Sheets</h2><button class="btn" onclick="closeSheets()">Close</button></div>
+<div class="tools"><input id="search" placeholder="Search Date, Subject, Job No or Document No..." oninput="render()"><button class="btn" onclick="loadDocs()">Refresh</button></div>
+<div class="tabs"><button id="tab-all" class="tab active" onclick="setTab('ALL')">All</button><button id="tab-quotation" class="tab" onclick="setTab('QUOTATION')">Quotation</button><button id="tab-invoice" class="tab" onclick="setTab('INVOICE')">Invoice</button></div>
+<div class="table-wrap"><table><thead><tr><th><button onclick="sortBy('date')">Date <span class="sort-mark" id="sort-date"></span></button></th><th><button onclick="sortBy('subject')">Subject <span class="sort-mark" id="sort-subject"></span></button></th><th><button onclick="sortBy('rdno')">Job No (RD No) <span class="sort-mark" id="sort-rdno"></span></button></th><th><button onclick="sortBy('qno')">Quotation / Invoice No <span class="sort-mark" id="sort-qno"></span></button></th><th><button onclick="sortBy('status')">Status <span class="sort-mark" id="sort-status"></span></button></th><th>TOTAL AMOUNT</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="mobile-actions"><button class="btn" onclick="loadDocs()">↻ Refresh Sheets</button></div>
+</div>
+<script>
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbw14bM6eMeLGTZHqVurS-KuNJceCjj-BZujvAbHqzEG7Ic5i3SJetSuEJv7anw5rRodzg/exec";
+let docs=[],activeTab='ALL',sortKey='date',sortDir='desc';
+function safe(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(v){if(!v)return '';const p=String(v).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:safe(v)}
+function typeOf(d){return String(d.docType||'QUOTATION').toUpperCase()==='INVOICE'?'INVOICE':'QUOTATION'}
+function total(d){let sub=0;(d.items||[]).forEach(i=>sub+=(parseFloat(i.qty)||0)*(parseFloat(i.price)||0));const tax=d.fields?.['chk-show-tax']?.checked?(parseFloat(d.tax)||0):0;const adv=typeOf(d)==='INVOICE'?(parseFloat(d.fields?.['inv-advance-amount']?.value)||0):0;return sub+tax-adv}
+function getKey(d){return d.key||((d.rdno||'')+'_'+(d.qno||''))}
+async function loadDocs(){
+  let local={};try{local=JSON.parse(localStorage.getItem('sfg_all_drafts')||'{}')}catch(e){}
+  const map=new Map();Object.keys(local).forEach(k=>{const d=local[k]||{};if(d.rdno||d.qno)map.set(getKey({...d,key:k}),{...d,key:k})});
+  try{const r=await fetch(SCRIPT_URL+'?action=list',{cache:'no-store'});if(r.ok){const raw=await r.json();const list=Array.isArray(raw)?raw:(raw.drafts||raw.data||raw.records||raw.items||[]);list.forEach((item,i)=>{const d=item.data&&typeof item.data==='object'?item.data:item;if(d&&(d.rdno||d.qno)){const key=item.key||getKey(d)||('remote_'+i);const old=map.get(key);if(!old||new Date(d.savedAt||0)>new Date(old.savedAt||0))map.set(key,{...d,key})}})}}catch(e){}
+  docs=[...map.values()].filter(d=>d.rdno||d.qno);try{const merged={...local};docs.forEach(d=>{if(d.key)merged[d.key]=d});localStorage.setItem('sfg_all_drafts',JSON.stringify(merged))}catch(e){}render();
+}
+function setTab(tab){activeTab=tab;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+(tab==='ALL'?'all':tab.toLowerCase())).classList.add('active');render()}
+function sortBy(key){if(sortKey===key)sortDir=sortDir==='asc'?'desc':'asc';else{sortKey=key;sortDir='asc'}render()}
+function compare(a,b){let av,bv;if(sortKey==='date'){av=String(a.date||'');bv=String(b.date||'')}else if(sortKey==='subject'){av=String(a.subject||'').toLowerCase();bv=String(b.subject||'').toLowerCase()}else if(sortKey==='rdno'){av=String(a.rdno||'').toLowerCase();bv=String(b.rdno||'').toLowerCase()}else if(sortKey==='qno'){av=String(a.qno||'').toLowerCase();bv=String(b.qno||'').toLowerCase()}else{av=String(String(a.cdate||'').trim()!==''?'Complete':'Pending');bv=String(String(b.cdate||'').trim()!==''?'Complete':'Pending')}let n=av.localeCompare(bv,undefined,{numeric:true,sensitivity:'base'});return sortDir==='asc'?n:-n}
+function render(){
+  const q=(document.getElementById('search').value||'').toLowerCase();const body=document.getElementById('rows');body.innerHTML='';
+  let list=docs.filter(d=>activeTab==='ALL'||typeOf(d)===activeTab).filter(d=>[d.date,d.subject,d.rdno,d.qno,typeOf(d)].join(' ').toLowerCase().includes(q)).sort(compare);
+  ['date','subject','rdno','qno','status'].forEach(k=>{const el=document.getElementById('sort-'+k);if(el)el.textContent=sortKey===k?(sortDir==='asc'?'▲':'▼'):''});
+  if(!list.length){body.innerHTML='<tr><td colspan="6" class="empty">No quotation / invoice sheets found.</td></tr>';return}
+  list.forEach(d=>{const tr=document.createElement('tr');tr.className='file-row';const complete=String(d.cdate||'').trim()!=='';const amount=total(d).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});const typ=typeOf(d);tr.innerHTML='<td data-label="Date">'+fmt(d.date)+'</td><td data-label="Subject">'+safe(String(d.subject||'').substring(0,50))+'</td><td data-label="Job No (RD No)">'+safe(d.rdno)+'</td><td data-label="Document No"><span class="type-badge '+(typ==='INVOICE'?'type-invoice':'type-quotation')+'">'+typ+'</span> '+safe(d.qno)+'</td><td data-label="Status" class="'+(complete?'status-complete':'status-pending')+'">'+(complete?'Complete':'Pending')+'</td><td data-label="TOTAL AMOUNT" class="amount">LKR '+amount+'</td>';tr.onclick=()=>openSheet(d);body.appendChild(tr)})
+}
+function openSheet(d){const key=d.key||getKey(d);if(!key){alert('Access denied.');return}window.open('index.html?view=sheet&key='+encodeURIComponent(key),'_blank','noopener')}
+function closeSheets(){if(window.opener){window.close();}else{document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Segoe UI,Tahoma,sans-serif;background:#f4f4f4"><div style="background:#fff;padding:30px;border-radius:14px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.15)"><h2 style="color:#dc3545">Access Denied</h2><p>This window cannot return to the Home page.</p></div></div>';}}
+loadDocs();setInterval(loadDocs,5000);
+</script>
+</body></html>
