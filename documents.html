@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SFG - Quotation &amp; Invoice Sheets</title>
+<link rel="icon" href="image/favicon.ico" type="image/x-icon">
+<style>
+:root{--blue:#004085;--border:#d9e1e8;--muted:#64748b}
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f4f4f4;margin:0;padding:24px;color:#222}
+.wrap{max-width:1380px;margin:auto;background:#fff;border:1px solid #ccc;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:20px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:15px}
+.head h2{margin:0;color:var(--blue)}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:18px;padding:8px 15px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{filter:brightness(1.12)}.btn:disabled{opacity:.55;cursor:wait}
+.btn-small{font-size:11px;border-radius:5px;padding:6px 9px;margin:2px}
+.btn-edit{background:#176b9c}.btn-delete{background:#bd2838}.btn-preview{background:#166534}
+.tools{display:flex;gap:10px;margin-bottom:12px}.tools input{flex:1;min-width:0;padding:9px;border:1px solid #aaa;border-radius:5px}
+.tabs{display:flex;gap:8px;margin-bottom:12px;border-bottom:1px solid #ddd}.tab{border:1px solid #c8d2dc;background:#fff;color:var(--blue);padding:9px 20px;border-radius:8px 8px 0 0;font-weight:800;cursor:pointer}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:6px}
+table{width:100%;border-collapse:collapse;min-width:1150px}th{background:var(--blue);color:#fff;padding:0;text-align:left;white-space:nowrap}th button{display:block;width:100%;padding:10px;border:0;background:transparent;color:inherit;text-align:left;font:inherit;font-weight:800;cursor:pointer}th button:hover{background:rgba(255,255,255,.12)}th .sort-mark{font-size:10px;margin-left:5px}
+td{padding:9px;border-bottom:1px solid #ddd;vertical-align:middle}tbody tr:hover{background:#f5f9fd}.empty{text-align:center;padding:30px;color:#777}
+.type-badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:800}.type-quotation{background:#e0f2fe;color:#004085}.type-invoice{background:#fee2e2;color:#9b1c1c}
+.status-pending{color:#dc3545;font-weight:bold}.status-complete{color:#198754;font-weight:bold}.amount{font-weight:700;text-align:right;white-space:nowrap}
+.paid-cell{text-align:center}.paid-check{width:17px;height:17px;accent-color:#16803d;cursor:pointer}.paid-date{min-width:132px;max-width:145px;padding:6px;border:1px solid #a6b2c3;border-radius:4px;font:inherit;font-size:12px}.actions{white-space:nowrap}
+.row-number{font-weight:800;color:#004085}.notice{min-height:22px;color:var(--muted);font-size:12px;margin:4px 0 12px}.notice.error{color:#b42318}.notice.success{color:#166534}
+@media(max-width:760px){body{padding:8px}.wrap{padding:10px}.head{align-items:flex-start;flex-direction:column}.head h2{font-size:19px}.tools{flex-wrap:wrap}.tools input{flex-basis:100%}.tabs{gap:5px}.tab{flex:1;padding:9px 7px;font-size:12px}.table-wrap{border:0;overflow:visible}table{min-width:0}thead{display:none}tbody,tr,td{display:block;width:100%}tr{background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;padding:5px;box-shadow:0 2px 7px rgba(0,0,0,.06)}td{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:7px 6px;border-bottom:1px solid #eee;text-align:right}td:last-child{border:0}td::before{content:attr(data-label);font-weight:800;color:#555;text-align:left}.paid-cell{justify-content:space-between}.actions{justify-content:flex-end;flex-wrap:wrap}.actions:before{margin-right:auto}}
+/* Cloud is optional; settings are local to each device. */
+.cloud-status{font-size:12px;color:#526b83;background:#f0f6fc;border:1px solid #dbe6f4;padding:9px 12px;border-radius:9px;margin:8px 0 12px}
+@media(max-width:760px){.cloud-status{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><h2>Quotation &amp; Invoice Sheets</h2><button class="btn" onclick="closeSheets()">Close</button></div>
+  <div class="tools"><input id="search" placeholder="Search date, subject, RD No, quotation/invoice No..." oninput="render()" aria-label="Search documents"><button class="btn" onclick="loadDocs()">↻ Refresh</button></div>
+  <div class="tabs"><button id="tab-all" class="tab active" onclick="setTab('ALL')">All</button><button id="tab-quotation" class="tab" onclick="setTab('QUOTATION')">Quotation</button><button id="tab-invoice" class="tab" onclick="setTab('INVOICE')">Invoice</button></div>
+  <p id="cloud-info" class="cloud-status" role="status">☁ Cloud: not configured. Saved files are stored in this browser until you connect Google Sheets in the main editor Settings.</p>
+  <p id="notice" class="notice" role="status" aria-live="polite"></p>
+  <div class="table-wrap"><table><thead><tr>
+    <th>No.</th><th><button onclick="sortBy('date')">Date <span id="sort-date" class="sort-mark"></span></button></th>
+    <th><button onclick="sortBy('subject')">Subject <span id="sort-subject" class="sort-mark"></span></button></th>
+    <th><button onclick="sortBy('rdno')">Job No (RD No) <span id="sort-rdno" class="sort-mark"></span></button></th>
+    <th><button onclick="sortBy('qno')">Quotation / Invoice No <span id="sort-qno" class="sort-mark"></span></button></th>
+    <th><button onclick="sortBy('status')">Status <span id="sort-status" class="sort-mark"></span></button></th>
+    <th>Total Amount</th><th>Paid</th><th>Paid Date</th><th>Actions</th>
+  </tr></thead><tbody id="rows"></tbody></table></div>
+</div>
+<script src="cloud/cloud-client.js"></script>
+<script>
+// Step 10: keep source-compatible local document storage and cloud endpoint.
+const SCRIPT_URL=""; // Runtime-configured SFGCloud only
+const DOCUMENTS_KEY='sfg_all_drafts', AUTO_KEY='sfg_auto_drafts_v1';
+const PAYMENT_KEY='sfg_document_payment_metadata_v1', DELETED_KEY='sfg_documents_hidden_v1';
+let docs=[],activeTab='ALL',sortKey='qno',sortDir='asc',busyKeys=new Set();
+function readJSON(key){try {const v=JSON.parse(localStorage.getItem(key)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch(e){return {}}}
+function writeJSON(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function safe(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(v){if(!v)return '';const p=String(v).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:safe(v)}
+function typeOf(d){return String(d.docType||'QUOTATION').toUpperCase()==='INVOICE'?'INVOICE':'QUOTATION'}
+function total(d){let sub=0;(d.items||[]).forEach(i=>sub+=(parseFloat(i.qty)||0)*(parseFloat(i.price)||0));const tax=d.fields?.['chk-show-tax']?.checked?(parseFloat(d.tax)||0):0;const advance=typeOf(d)==='INVOICE'?(parseFloat(d.fields?.['inv-advance-amount']?.value)||0):0;return sub+tax-advance}
+function getKey(d){return d.key || (String(d.rdno||'').trim()&&String(d.qno||'').trim()?`RD_${d.rdno}_NO_${d.qno}`:(String(d.rdno||'')+'_'+String(d.qno||'')))}
+function notice(message,type=''){const el=document.getElementById('notice');el.textContent=message||'';el.className='notice '+type}
+function remoteList(raw){return Array.isArray(raw)?raw:(raw?.drafts||raw?.data||raw?.records||raw?.items||[])}
+async function fetchRemote(){return window.SFGCloud?.enabled()?await window.SFGCloud.list():[];}
+async function loadDocs(){
+  const local=readJSON(DOCUMENTS_KEY),payments=readJSON(PAYMENT_KEY),deleted=readJSON(DELETED_KEY);
+  const map=new Map();Object.entries(local).forEach(([key,d])=>{if(d&&(d.rdno||d.qno)&&!deleted[key])map.set(key,{...d,key})});
+  try{
+    const list=await fetchRemote();
+    list.forEach((item,i)=>{
+      const d=item?.data&&typeof item.data==='object'?item.data:item;
+      if(!d||( !d.rdno&&!d.qno))return;
+      const key=item.key||getKey(d)||('remote_'+i);
+      if(deleted[key])return;
+      const older=map.get(key);
+      if(!older||Date.parse(d.savedAt||0)>Date.parse(older.savedAt||0))map.set(key,{...d,key});
+    });
+  }catch(e){notice('Showing browser documents. Cloud could not be loaded: '+e.message,'error')}
+  docs=[...map.values()].map(d=>({...d,...(payments[d.key]||{})}));
+  try{const merged={...local};docs.forEach(d=>{merged[d.key]=d});writeJSON(DOCUMENTS_KEY,merged)}catch(e){notice('Browser storage is full. Changes may not persist.','error')}
+  render();
+}
+function setTab(tab){activeTab=tab;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.getElementById('tab-'+(tab==='ALL'?'all':tab.toLowerCase())).classList.add('active');render()}
+function sortBy(key){if(sortKey===key)sortDir=sortDir==='asc'?'desc':'asc';else{sortKey=key;sortDir='asc'}render()}
+function compare(a,b){
+  let av,bv;
+  if(sortKey==='status'){av=a.cdate?'Complete':'Pending';bv=b.cdate?'Complete':'Pending'}
+  else {av=String(a[sortKey]||'');bv=String(b[sortKey]||'')}
+  const n=av.localeCompare(bv,undefined,{numeric:true,sensitivity:'base'});
+  return sortDir==='asc'?n:-n;
+}
+function td(label,html,css=''){const el=document.createElement('td');el.dataset.label=label;if(css)el.className=css;el.innerHTML=html;return el}
+function button(text,css,handler){const b=document.createElement('button');b.type='button';b.textContent=text;b.className='btn btn-small '+css;b.addEventListener('click',handler);return b}
+function render(){
+ const filter=String(document.getElementById('search').value||'').toLowerCase();const body=document.getElementById('rows');body.replaceChildren();
+ const list=docs.filter(d=>(activeTab==='ALL'||typeOf(d)===activeTab)&&[d.date,d.subject,d.rdno,d.qno,typeOf(d)].join(' ').toLowerCase().includes(filter)).sort(compare);
+ ['date','subject','rdno','qno','status'].forEach(key=>{const el=document.getElementById('sort-'+key);if(el)el.textContent=sortKey===key?(sortDir==='asc'?'▲':'▼'):''});
+ if(!list.length){const tr=document.createElement('tr');tr.innerHTML='<td colspan="10" class="empty">No quotation / invoice sheets found.</td>';body.appendChild(tr);return}
+ list.forEach((d,i)=>{
+   const key=d.key,typ=typeOf(d),tr=document.createElement('tr');tr.className='file-row';
+   tr.appendChild(td('No.',String(i+1),'row-number'));
+   tr.appendChild(td('Date',fmt(d.date)));
+   tr.appendChild(td('Subject',safe(String(d.subject||'').substring(0,90))));
+   tr.appendChild(td('RD No',safe(d.rdno)));
+   tr.appendChild(td('Document No','<span class="type-badge '+(typ==='INVOICE'?'type-invoice':'type-quotation')+'">'+typ+'</span> '+safe(d.qno)));
+   tr.appendChild(td('Status',d.cdate?'Complete':'Pending',d.cdate?'status-complete':'status-pending'));
+   tr.appendChild(td('Total Amount','LKR '+total(d).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),'amount'));
+   const paidCell=document.createElement('td');paidCell.dataset.label='Paid';paidCell.className='paid-cell';
+   const chk=document.createElement('input');chk.type='checkbox';chk.className='paid-check';chk.checked=!!d.paid;chk.disabled=busyKeys.has(key);chk.setAttribute('aria-label','Paid: '+String(d.qno||''));chk.addEventListener('change',()=>updatePayment(key,{paid:chk.checked,paidDate:chk.checked?(d.paidDate||''):''}));paidCell.append(chk);tr.append(paidCell);
+   const paidDateCell=document.createElement('td');paidDateCell.dataset.label='Paid Date';
+   const date=document.createElement('input');date.type='date';date.className='paid-date';date.value=/^\d{4}-\d{2}-\d{2}$/.test(String(d.paidDate||''))?d.paidDate:'';date.disabled=busyKeys.has(key);date.setAttribute('aria-label','Paid Date: '+String(d.qno||''));date.addEventListener('change',()=>updatePayment(key,{paid:date.value?true:!!d.paid,paidDate:date.value}));paidDateCell.append(date);tr.append(paidDateCell);
+   const actions=document.createElement('td');actions.className='actions';actions.dataset.label='Actions';
+   actions.append(button('Preview (New Tab)','btn-preview',()=>openSheet(d)),button('Edit','btn-edit',()=>editSheet(d)),button('Delete','btn-delete',()=>deleteSheet(d)));tr.append(actions);
+   body.appendChild(tr);
+ });
+}
+function openSheet(d){window.open('index.html?view=sheet&key='+encodeURIComponent(d.key),'_blank','noopener')}
+function editSheet(d){window.open('index.html?edit=1&key='+encodeURIComponent(d.key),'_blank','noopener')}
+async function saveCloud(payload){
+  if(!window.SFGCloud?.enabled())return false;
+  const result=await window.SFGCloud.write(payload.action,payload.key,payload.data);
+  return !!result.ok;
+}
+async function updatePayment(key,change){
+ const d=docs.find(x=>x.key===key);if(!d||busyKeys.has(key))return;
+ const next={...d,...change};const payments=readJSON(PAYMENT_KEY),saved=readJSON(DOCUMENTS_KEY);
+ try{payments[key]={paid:!!next.paid,paidDate:next.paidDate||''};saved[key]=next;writeJSON(PAYMENT_KEY,payments);writeJSON(DOCUMENTS_KEY,saved)}catch(e){notice('Cannot save payment information in browser storage.','error');render();return}
+ Object.assign(d,next);render();
+ busyKeys.add(key);notice('Paid details saved in this browser. Checking Google Sheets…');
+ const ok=await saveCloud({action:'save',key,data:next});
+ busyKeys.delete(key);render();
+ notice(ok?'Paid details saved in browser and verified in Google Sheets.':'Paid details saved in this browser. Cloud save is not configured or was not verified.',ok?'success':'error');
+}
+async function deleteSheet(d){
+ if(!confirm(`Delete ${typeOf(d)} ${d.qno||''} (RD ${d.rdno||''})?\n\nThis will remove the saved file from this browser.`))return;
+ const key=d.key;let saved=readJSON(DOCUMENTS_KEY),auto=readJSON(AUTO_KEY),payment=readJSON(PAYMENT_KEY),deleted=readJSON(DELETED_KEY);
+ delete saved[key];delete auto[key];delete payment[key];deleted[key]=new Date().toISOString();
+ try{writeJSON(DOCUMENTS_KEY,saved);writeJSON(AUTO_KEY,auto);writeJSON(PAYMENT_KEY,payment);writeJSON(DELETED_KEY,deleted);if(localStorage.getItem('sfg_current_draft_key')===key)localStorage.removeItem('sfg_current_draft_key')}
+ catch(e){notice('Could not delete from browser storage.','error');return}
+ docs=docs.filter(x=>x.key!==key);render();
+ notice('Document deleted in this browser. Checking Google Sheets deletion…');
+ await saveCloud({action:'delete',key});
+ // Do not report an unverified deletion as permanent: the Apps Script backend is not bundled.
+ try{
+   const records=await fetchRemote();const remains=records.some((entry,i)=>{const data=entry?.data&&typeof entry.data==='object'?entry.data:entry;return (entry.key||getKey(data)||'remote_'+i)===key});
+   notice(remains?'Deleted in browser; the record still exists in Google Sheets. Delete it in the backend to remove it globally.':'Deleted in browser; record not present in the verified Google Sheets list.',remains?'error':'success');
+ }catch(e){notice('Deleted in browser. Google Sheets deletion could not be verified; update the Apps Script backend if needed.','error')}
+}
+function closeSheets(){if(window.opener)window.close();else location.href='index.html'}
+function refreshCloudInfo(){const el=document.getElementById('cloud-info');if(el)el.textContent=window.SFGCloud?.enabled()?'☁ Cloud connection configured for this device. Refresh to synchronize.':'☁ Cloud: not configured. To access files on another device, connect Google Sheets in main editor → Settings.';}
+refreshCloudInfo();
+window.addEventListener('storage',event=>{if([DOCUMENTS_KEY,PAYMENT_KEY,DELETED_KEY].includes(event.key))loadDocs()});
+loadDocs();
+// Keep existing live refresh while avoiding replacement of an actively edited Paid Date input.
+setInterval(()=>{if(!document.activeElement?.matches('.paid-date,.paid-check'))loadDocs()},15000);
+</script>
+</body>
+</html>
