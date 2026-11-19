@@ -1,0 +1,8 @@
+STEP 18 — CLOUD SYNC TIMEOUT CORRECTION
+- Fixed browser sync that tried to fetch all Google Drive JSON files in a single 15-second request.
+- Cloud client now fetches Google Apps Script listPage records in batches of two with a longer timeout and progress reporting.
+- Main Dashboard/Settings sync saves completed batches to local browser storage, preserving downloaded data if a later request fails.
+- Cloud upload and documents.html also use paginated list() when updated backend is deployed.
+- Google Apps Script Code.gs MUST ALSO be updated and redeployed for paging.
+- No changes to quotation/invoice layout, calculations, printing, existing cloud files or Sheet columns.
+- The access key is NOT included in the website ZIP.
