@@ -1,0 +1,11 @@
+STEP 23 — Bookmark / Browser / Home-Screen Favicon Support
+
+- Retained the original SFG favicon.ico and image/favicon.ico.
+- Added consistent PNG variants for browser favorites and bookmarks.
+- Added apple-touch-icon.png (180x180) for iOS home screen shortcuts.
+- Added site.webmanifest, icon-192.png and icon-512.png for mobile browsers.
+- Updated icon references in index.html and documents.html with v=23 cache busting.
+- All other original website files remain unchanged.
+
+DEPLOYMENT: Upload files from the ZIP root to the same root of the existing GitHub Pages website. Ensure new image and site.webmanifest files are uploaded. Reload the site and remove/re-add existing iPhone home screen bookmark to pick up new icon.
+Note: The 180/192/512 icons were resized from the original 48px favicon and preserve its appearance; for sharper large mobile icons, provide an original vector or high-resolution square SFG logo.

@@ -1,0 +1,30 @@
+SFG Quotation Website — STEP 16
+Mobile screen layout / A4 Print correction (2026-11-19)
+
+Base: Step 15 Favicon Added ZIP
+
+1) Screen-only responsive rules: original mobile @media query changed to @media screen and (max-width:900px).
+   This prevents mobile form/preview transformations from affecting physical printing.
+2) Compact mobile editor: reduced margins, card sizes, control heights, and section spacing.
+   - Order / Complete Date aligned on one row with Auto action.
+   - PR No / RD No aligned on one row.
+   - Quotation/Invoice number with adjacent show toggle.
+   - Item Description, Delivery Date / D.O No, Size/L/R/Qty/Price and Delivery Order button arranged compactly.
+   - Terms, Draft Manager, Stamp and bottom controls tightened without removing functionality.
+3) Print-only A4 layout: forced fixed 210mm sheet width / single-page print footprint independent of mobile screen width.
+   - Quotation / Invoice screen scaling disabled for printing.
+   - Delivery Order uses two 210mm x 148mm copies within one A4 portrait page (296mm total, page-break safety margin).
+   - Existing document values / original visual design remain unchanged.
+4) No changes to document storage, cloud connector, numbering, or business logic.
+5) No changes to documents.html or asset files.
+
+Validation:
+- JavaScript syntax: pass.
+- Mobile visual checks at 320, 360, 375, 390, 430, 768px: no horizontal overflow.
+- Chromium A4 PDF generation (390 / 768 / 1440px viewports): Quotation and two-copy Delivery Order each one A4 page.
+- 10-item Quotation and Invoice A4 PDF check: one page; document item rows and signature present.
+- iOS Safari physical print verification remains recommended, since Safari printing differs from Chromium.
+
+Deployment:
+Replace site files in the *existing* GitHub Pages repository/hosting branch, keeping the same public URL.
+After publishing, refresh on iPhone (close tab/open again if necessary) and select A4 + Portrait in Print Options.

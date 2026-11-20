@@ -1,0 +1,19 @@
+SFG Quotation Website — Step 21
+Items & Pricing classic compact UI update
+
+- Restyled only the Items & Pricing editor; retained dark neutral-grey section background.
+- Item descriptions now use the three-line compact layout shown in the supplied reference.
+  Row 1: Description + Select
+  Row 2: Size + Left/Right + Quantity + Price (LKR)
+  Row 3: Delivery Date + Delivery Order No + Original Former + Return Qty
+  Delivery Order action remains on the right spanning rows 2 and 3.
+- Kept classic, flat borders and minimal corner rounding, rather than modern cards.
+- Preserved add/delete, item selection, delivery grouping, Original Former, draft save and cloud-related selectors and event handlers.
+- Screen-only responsive adjustments for 320px, 390px, 520px, 768px and desktop.
+- No changes to print layout, invoices, delivery-order template or other website files.
+
+Verification:
+- JavaScript syntax check passed.
+- Visual inspection at 320 / 390 / 520 / 768 / 1440px.
+- Browser JS test: new item added with + Add logic, item inputs and Original Former Qty change successfully.
+- Live Google Sheets / Drive back end not retested.

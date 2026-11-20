@@ -1,0 +1,14 @@
+STEP 20 — Items & Pricing compact layout
+
+- Reorganized each item into three compact rows in desktop and mobile editor.
+  Row 1: Select item, Description, Size
+  Row 2: Delivery Date, D.O. Number, Side L/R, Quantity
+  Row 3: Unit Price, Delivery Order, Original Former checkbox and return Qty
+- Removed excess item card padding and vertical gaps.
+- Preserved all existing input class names and event handlers, including Save/Restore,
+  Delivery Order grouping, original return quantities and delete selection.
+- No changes to A4 Quotation/Invoice or Delivery Order print templates, Cloud backend,
+  documents.html, image or library assets.
+
+Note: on narrow mobile widths, the on-screen Original Former label is abbreviated to
+'Orig.' to maintain the three-row layout; the full accessible label is retained.

@@ -1,0 +1,3 @@
+STEP 17 - JPG Export for Quotation and Invoice
+
+Added Save JPG button beside Print. The current Quotation / Invoice preview is exported as an A4 JPG with document number, RD number, subject and date in its filename. All other site files retained from Step 16.

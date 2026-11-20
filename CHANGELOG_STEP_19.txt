@@ -1,0 +1,11 @@
+SFG Quotation Website - Step 19
+Changes from Step 18 only:
+1. Group all items in the current Quotation/Invoice that share BOTH the same Delivery Order number and the same Delivery Date into a single Delivery Order (works when opened from any matching item).
+2. Add an Original Former checkbox and separate original Qty field beside each item's Delivery Order button. Selected original items are printed in the Delivery Order's ORIGINAL ITEMS BEING RETURNED section as '(Original Former) <item name>', using the original item size and side, and ONLY the separately entered original Qty.
+3. Preserve originalFormer and originalQty in browser state, auto drafts, manually saved documents, backups, editable PDF import/export and cloud document data.
+4. Grouped content appears on both copies of the A4 Delivery Order PDF/print and JPG export. The grouped export filename summarizes the grouped item names.
+5. If a selected Original Former has no positive return Qty, opening that Delivery Order displays an error instead of producing an incorrect sheet.
+
+The original Step 18 Cloud Sync code and all other source files are unchanged.
+Deployment: Upload the updated index.html (or the full ZIP contents) to the website's hosting repository, preserving the other files and paths. No Google Apps Script redeployment is required for these two UI changes.
+Note: To keep the existing two-copy A4 Delivery Order template, the font automatically becomes smaller when more than 5 manufactured items or 2 original-return items share the same Delivery Order. Check readability when printing unusually large groups.

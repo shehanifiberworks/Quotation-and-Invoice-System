@@ -1,0 +1,14 @@
+SFG Quotation Website — Step 22 (20 November 2026)
+
+1. Items & Pricing: added compact, always-visible increase/decrease controls
+   for numeric Size values, Quantity, Unit Price, and Original Former Return Qty.
+   Alphanumeric sizes such as XL remain editable as text and are not altered
+   by numeric steppers.
+2. Narrowed Size/Qty/Price/Return Qty fields, retaining the classic gray panel.
+3. Saved Drafts Manager restyled to match the classic gray Items & Pricing
+   panel; no changes to its save, restore, delete or backup behavior.
+4. On small mobile screens the Item entry wraps its controls to additional
+   compact rows where needed, ensuring all fields remain accessible.
+
+All original features (Delivery Order, PDF/JPG, Google Cloud, Dashboard,
+Autosave) are retained. Only index.html has changed relative to Step 21.

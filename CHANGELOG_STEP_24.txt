@@ -1,0 +1,5 @@
+Step 24 — Website title update
+- index.html browser title: SFW Quotation and Invoice System
+- documents.html browser title: SFW Quotation and Invoice System - Sheets
+- site.webmanifest name/short_name updated for saved website shortcuts.
+- No business logic, images, styles, Cloud code, or other files modified.
